@@ -34,10 +34,14 @@
 </template>
 
 <script>
+import { useAppStore } from 'stores/app'
+
 export default {
   setup () {
-    return {
+    const app = useAppStore()
 
+    return {
+      app
     }
   }
 }
