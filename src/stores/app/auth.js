@@ -15,7 +15,7 @@ export const useAuthStore = defineStore('auth', {
       const appStore = useAppStore()
       const infuraKey = appStore.config.infura_key
       if (infuraKey) {
-        throw new Error({ code: 500101 })
+        // throw new Error({ code: 500101 })
       }
     }
   }
