@@ -1,4 +1,3 @@
-
 const routes = [
   {
     path: '/',
@@ -8,8 +7,17 @@ const routes = [
     ]
   },
 
-  // Always leave this as last one,
-  // but you can also remove it
+  {
+    path: '/settings',
+    component: () => import('layouts/SettingsLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/IndexPage.vue')
+      }
+    ]
+  },
+
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')
