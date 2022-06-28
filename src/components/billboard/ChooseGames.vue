@@ -1,12 +1,18 @@
 <template>
-  <div>
+  <div class="q-my-lg q-py-lg">
     <swiper
       :slidesPerView="'auto'"
       :spaceBetween="50"
       @swiper="onSwiper"
       @slideChange="onSlideChange"
     >
-      <swiper-slide v-for="item in elements" :key="item">
+      <swiper-slide v-for="item in elements" :key="item+'test1'">
+        <GameCardTpl :item="item" @selected="$emit('selected', item)" :isLoading="isLoading"/>
+      </swiper-slide>
+      <swiper-slide v-for="item in elements" :key="item+'test2'">
+        <GameCardTpl :item="item" @selected="$emit('selected', item)" :isLoading="isLoading"/>
+      </swiper-slide>
+      <swiper-slide v-for="item in elements" :key="item+'test3'">
         <GameCardTpl :item="item" @selected="$emit('selected', item)" :isLoading="isLoading"/>
       </swiper-slide>
     </swiper>
@@ -16,6 +22,10 @@
 <style scoped lang="scss">
   .swiper-slide {
     width: auto !important;
+  }
+
+  .swiper {
+    overflow: visible !important;
   }
 </style>
 

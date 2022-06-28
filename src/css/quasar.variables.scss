@@ -35,6 +35,8 @@ $flex-gutter-lg : ($space-base * 1.5) !default;
 $flex-gutter-xl : ($space-base * 3) !default;
 $flex-gutter: ('none': 0, 'xs': $flex-gutter-xs, 'sm': $flex-gutter-sm, 'md': $flex-gutter-md, 'lg': $flex-gutter-lg, 'xl': $flex-gutter-xl) !default;
 
+$breakpoint-lg-container: 1200px !default;
+
 $primary   : #0099FF;
 $secondary : #F1F2F4;
 $accent    : #9C27B0;

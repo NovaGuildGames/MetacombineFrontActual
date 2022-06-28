@@ -1,37 +1,27 @@
 <template>
-  <q-page class="q-pa-lg">
-    <div class="q-py-md row justify-between">
-      <div class="text-h4">
-        Games
+  <q-page class="q-pt-lg">
+    <div class="container">
+      <div class="q-pt-md q-pb-sm row justify-between">
+        <div class="text-h3">
+          Games
+        </div>
+        <q-btn :ripple="false" flat rounded color="primary" class="text-bold" label="All games" />
       </div>
-      <q-btn :ripple="false" flat rounded color="primary" label="All games" />
+
+      <div class="q-mb-md">
+        <q-input
+          v-model="search"
+          debounce="500"
+          placeholder="Search game"
+        >
+          <template v-slot:prepend>
+            <q-icon name="eva-search-outline" />
+          </template>
+        </q-input>
+      </div>
+
+      <ChooseGames :items="billboardStore.chooseGames" :isLoading="billboardStore.chooseGamesLoading" @selected="onChooseGameSelected" />
     </div>
-
-    <div class="q-mb-md">
-      <q-input
-        v-model="search"
-        debounce="500"
-        placeholder="Search game"
-      >
-        <template v-slot:prepend>
-          <q-icon name="search" />
-        </template>
-      </q-input>
-    </div>
-
-    <ChooseGames :items="billboardStore.chooseGames" :isLoading="billboardStore.chooseGamesLoading" @selected="onChooseGameSelected" />
-
-    <br><br>
-    <q-btn color="primary" label="New" />
-    <br><br>
-
-    <h1>Heading H1</h1>
-    <h2>Heading H2</h2>
-    <h3>Heading H3</h3>
-    <h4>Heading H4</h4>
-    <h5>Heading H5</h5>
-
-    <q-btn @click="add">Add slide</q-btn>
   </q-page>
 </template>
 

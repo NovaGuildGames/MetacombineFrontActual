@@ -1,20 +1,12 @@
 <template>
-  <div class="game-card-tpl cursor-pointer" @click="$emit('selected', item)">
-    <q-skeleton class="abs" type="rect" v-if="isLoading">
+  <div class="game-card-tpl cursor-pointer non-selectable" @click="$emit('selected', item)">
+    <q-skeleton class="abs no-pointer-events" type="rect" v-if="isLoading">
       <q-inner-loading :showing="true">
         <q-spinner size="50px" color="primary" />
       </q-inner-loading>
     </q-skeleton>
 
-    <div v-if="!isLoading" class="game-card-tpl__inner abs rounded-borders" transition-show="jump-down">
-      <q-img
-        class="game-card-tpl__bg2 abs"
-        loading="lazy"
-        :src="require('assets/poster1.png')"
-        :fit="cover"
-        spinner-color="white"
-      />
-
+    <div v-if="!isLoading" class="game-card-tpl__inner abs rounded-borders no-pointer-events" transition-show="jump-down">
       <q-img
         class="game-card-tpl__bg abs"
         loading="lazy"
@@ -57,7 +49,7 @@
             <q-badge class="badge-white" outline color="secondary" label="ios" />
           </div>
 
-          <div class="game-card-tpl__buttons">
+          <div class="game-card-tpl__buttons all-pointer-events">
             <q-btn color="secondary" class="full-width text-black" unelevated label="More" />
             <q-btn color="secondary" class="full-width text-black" unelevated label="Team search" v-if="item.id != 8" />
           </div>
@@ -162,10 +154,6 @@
       transition: opacity 0.3s ease !important;
     }
 
-    &__bg {
-      transition: opacity 0.3s ease !important;
-    }
-
     &:not(:hover) {
       .game-card-tpl__content {
         &.content1 {
@@ -189,10 +177,6 @@
       }
 
       .game-card-tpl__shadow2 {
-        opacity: 0;
-      }
-
-      .game-card-tpl__bg {
         opacity: 0;
       }
 
