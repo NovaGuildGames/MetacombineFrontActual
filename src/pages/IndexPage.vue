@@ -19,75 +19,44 @@
       </q-input>
     </div>
 
-    <swiper
-      :slidesPerView="'auto'"
-      :spaceBetween="20"
-      @swiper="onSwiper"
-      @slideChange="onSlideChange"
-    >
-      <swiper-slide v-for="item in appStore.slides" :key="item">
-        <div class="slide-inner">
+    <ChooseGames :items="billboardStore.chooseGames" :isLoading="billboardStore.chooseGamesLoading" @selected="onChooseGameSelected" />
 
-        </div>
-      </swiper-slide>
-    </swiper>
-
-    <pre>
-      {{slides}}
-    </pre>
     <q-btn @click="add">Add slide</q-btn>
   </q-page>
 </template>
 
-<style scoped lang="scss">
-  .slide-inner {
-    width: 150px;
-    height: 250px;
-    background: red;
-  }
-
-  .swiper-slide {
-    width: auto !important;
-  }
-</style>
-
 <script>
+import ChooseGames from 'components/billboard/ChooseGames'
+import { useBillboardStore } from 'stores/billboard'
+
 import { defineComponent } from 'vue'
 import { useAppStore } from 'stores/app'
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
-import 'swiper/css/scrollbar'
 
 export default defineComponent({
   name: 'IndexPage',
   components: {
-    Swiper,
-    SwiperSlide
+    ChooseGames
   },
   setup () {
-    const onSwiper = (swiper) => {
-      console.log(swiper)
-    }
-    const onSlideChange = () => {
-      console.log('slide change')
-    }
-
     const appStore = useAppStore()
+    const billboardStore = useBillboardStore()
 
     return {
       appStore,
-      onSwiper,
-      onSlideChange,
-      modules: [Navigation, Pagination, Scrollbar, A11y]
+      billboardStore
     }
   },
   methods: {
     async add () {
       await this.appStore.add()
+    },
+
+    async onChooseGameSelected (item) {
+      console.log(item)
     }
+  },
+  async mounted () {
+    await this.billboardStore.loadChooseGames()
   }
 })
 </script>
