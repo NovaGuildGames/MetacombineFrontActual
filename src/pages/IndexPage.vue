@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pt-lg">
+  <q-page class="q-pt-lg overflow-hidden">
     <div class="container">
       <div class="q-pt-md q-pb-sm row justify-between">
         <div class="text-h3">
@@ -15,18 +15,25 @@
           placeholder="Search game"
         >
           <template v-slot:prepend>
-            <q-icon name="eva-search-outline" />
+            <q-icon name="eva-search-outline" color="grey-5" />
           </template>
         </q-input>
       </div>
 
       <ChooseGames :items="billboardStore.chooseGames" :isLoading="billboardStore.chooseGamesLoading" @selected="onChooseGameSelected" />
+
+      <div class="row">
+        <div class="col-8">
+          <BillboardList />
+        </div>
+      </div>
     </div>
   </q-page>
 </template>
 
 <script>
 import ChooseGames from 'components/billboard/ChooseGames'
+import BillboardList from 'components/billboard/BillboardList'
 import { useBillboardStore } from 'stores/billboard'
 
 import { defineComponent } from 'vue'
@@ -35,7 +42,8 @@ import { useAppStore } from 'stores/app'
 export default defineComponent({
   name: 'IndexPage',
   components: {
-    ChooseGames
+    ChooseGames,
+    BillboardList
   },
   setup () {
     const appStore = useAppStore()

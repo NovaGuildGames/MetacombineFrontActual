@@ -2,19 +2,25 @@
   <q-layout view="hHh lpR lfr">
 
     <q-header reveal class="bg-white text-black">
-      <q-toolbar>
-        <q-toolbar-title>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-black.svg">
+      <q-toolbar class="q-pa-md">
+        <q-toolbar-title class="row items-center">
+          <q-avatar rounded size="1.75rem">
+            <img :src="require('src/assets/logo2.png')">
           </q-avatar>
-          <b>Meta</b>Combine
+          <div class="q-ml-sm">
+            <b>MetaCombine</b>
+          </div>
         </q-toolbar-title>
 
+        <q-btn flat>
+          Игры
+        </q-btn>
+
         <q-btn flat no-wrap>
-            <q-avatar rounded size="38px">
+            <q-avatar size="2rem">
               <img src="https://cdn.quasar.dev/img/avatar3.jpg">
             </q-avatar>
-            <q-icon name="arrow_drop_down" size="16px" />
+            <q-icon name="eva-chevron-down-outline" size="1.3rem" />
 
             <q-menu auto-close>
               <q-list dense>
@@ -68,8 +74,30 @@
       <router-view />
     </q-page-container>
 
+    <br><br><br>
+
     <q-footer class="bg-white text-black">
-      Footer
+      <div class="container q-mb-lg q-pb-sm">
+        <div class="row">
+          <div class="col" color="secondary">
+            <q-btn flat size="md" class="q-mr-md">
+              Cookies policy
+            </q-btn>
+
+            <q-btn flat size="md" class="q-mr-md">
+              Privacy policy
+            </q-btn>
+
+            <q-btn flat size="md" class="q-mr-md">
+              Linkedin
+            </q-btn>
+
+            <q-btn flat size="md" class="q-mr-md">
+              Youtube
+            </q-btn>
+          </div>
+        </div>
+      </div>
     </q-footer>
 
   </q-layout>

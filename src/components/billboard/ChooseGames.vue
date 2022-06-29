@@ -2,7 +2,7 @@
   <div class="q-my-lg q-py-lg">
     <swiper
       :slidesPerView="'auto'"
-      :spaceBetween="50"
+      :spaceBetween="43"
       @swiper="onSwiper"
       @slideChange="onSlideChange"
     >
