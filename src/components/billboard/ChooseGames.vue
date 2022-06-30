@@ -3,6 +3,8 @@
     <swiper
       :slidesPerView="'auto'"
       :spaceBetween="43"
+      :draggable="true"
+      :mousewheel="{forceToAxis: true}"
       @swiper="onSwiper"
       @slideChange="onSlideChange"
     >

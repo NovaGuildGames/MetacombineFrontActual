@@ -23,7 +23,7 @@ export const useBillboardStore = defineStore('billboard', {
     async loadChooseGames () {
       this._chooseGamesLoading = true
       await api.get('billboard/choose/games').then((res) => {
-        const rawData = res.data || [
+        const rawData = [
           {
             id: 7,
             name: 'Axie Infinity',
