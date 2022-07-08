@@ -1,7 +1,7 @@
 <template>
-  <q-layout view="hHh lpR lfr">
+  <q-layout view="hHh lpR fFf">
 
-    <q-header reveal class="bg-white text-black">
+    <q-header class="bg-white text-black">
       <q-toolbar class="q-pa-md">
         <q-toolbar-title class="row items-center">
           <q-avatar rounded size="1.75rem">
@@ -74,6 +74,10 @@
       <router-view />
     </q-page-container>
 
+    <q-drawer v-model="rightDrawerOpen" side="right" overlay behavior="desktop" :width="600" bordered v-show="false">
+      <!-- drawer content -->
+    </q-drawer>
+
     <br><br><br>
 
     <q-footer class="bg-white text-black">
@@ -109,9 +113,11 @@ import { useAppStore } from 'stores/app'
 export default {
   setup () {
     const app = useAppStore()
+    const rightDrawerOpen = true
 
     return {
-      app
+      app,
+      rightDrawerOpen
     }
   }
 }

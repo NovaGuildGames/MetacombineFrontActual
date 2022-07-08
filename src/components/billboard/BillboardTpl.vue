@@ -10,12 +10,8 @@
           </div>
 
           <div class="q-ml-sm">
-            <q-chip outline color="grey" size="sm">
-              android
-            </q-chip>
-
-            <q-chip outline color="grey" size="sm">
-              ios
+            <q-chip v-for="device in item.devices" :key="device" outline color="grey" size="sm">
+              {{device}}
             </q-chip>
           </div>
         </div>
@@ -93,7 +89,7 @@
         </div>
 
         <div class="f1 q-my-md text-black">
-          Ищем 5 человек в игру чтобы угареть по полной так как у нас куча дел и вообще полный швах
+          {{item.text}}
         </div>
 
         <div class="q-mt-md">

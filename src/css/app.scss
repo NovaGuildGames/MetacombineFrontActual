@@ -49,3 +49,37 @@
   margin-right: auto;
   margin-left: auto;
 }
+
+.q-dialog__inner--fullheight {
+  padding: 0px !important;
+  border: 0px !important;
+  border-radius: 0px !important;
+}
+
+.q-dialog__inner > div {
+  box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.03);
+}
+
+.modal-default {
+  .q-dialog__backdrop {
+    background: transparent !important;
+  }
+}
+
+.modal-back {
+  width: 700px;
+  pointer-events: none !important;
+  position: relative;
+
+  .modal-back-inner {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    background: white;
+    pointer-events: all !important;
+    position: absolute;
+    top: 72px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+  }
+}
