@@ -6,7 +6,10 @@ import _ from 'lodash'
 export const useBillboardStore = defineStore('billboard', {
   state: () => ({
     _chooseGames: [],
-    _chooseGamesLoading: false
+    _chooseGamesLoading: false,
+    _advertsLoading: false,
+    _adverts: [],
+    _adverts_pagination: []
   }),
 
   getters: {
@@ -16,6 +19,18 @@ export const useBillboardStore = defineStore('billboard', {
 
     chooseGamesLoading (state) {
       return state._chooseGamesLoading
+    },
+
+    adverts (state) {
+      return state._adverts
+    },
+
+    advertsLoading (state) {
+      return state._advertsLoading
+    },
+
+    advertsPagination (state) {
+      return state._adverts_pagination
     }
   },
 
@@ -23,56 +38,12 @@ export const useBillboardStore = defineStore('billboard', {
     async loadChooseGames () {
       this._chooseGamesLoading = true
       await api.get('billboard/choose/games').then((res) => {
-        const rawData = [
-          {
-            id: 7,
-            name: 'Axie Infinity',
-            logo: 'games/fc93491b0fea53ab79dc0717c3704c5c.jpg',
-            blockchain_image:
-              'blockchains/6f1799c861ef34376e02156b71030428.png',
-            devices: 'Android||IOS||Windows',
-            genres: 'Breeding||Card||PVP'
-          },
-          {
-            id: 8,
-            name: 'Decentraland',
-            logo: 'games/1fa54f9858bd37254dd4263d6ad84b23.png',
-            blockchain_image:
-              'blockchains/6f1799c861ef34376e02156b71030428.png',
-            devices: null,
-            genres: null
-          },
-          {
-            id: 9,
-            name: 'Game for Soroka',
-            logo: 'games/logos/J6qLcD3WqlATjDu2WLQnubTodIRaC99ucYbh1rsw.png',
-            blockchain_image:
-              'blockchains/80d95d31f4babe4c99707cd66372732e.png',
-            devices: null,
-            genres: 'Logic'
-          },
-          {
-            id: 10,
-            name: 'Dettroxx game',
-            logo: 'games/logos/Hz5puMVVVchCuDS50iofCxZ28Qbil0wsQUxUjxiA.jpg',
-            blockchain_image: null,
-            devices: 'Android||Linux||Web',
-            genres: 'All-Genre||Art||Augmented-Reality||Auto-Battler||Board'
-          },
-          {
-            id: 11,
-            name: 'Dastan Game',
-            logo: 'games/logos/Gl8pM7l2mbJit5YfNic72svZ0pSPiq5xqtjcUAjH.jpg',
-            blockchain_image: null,
-            devices: 'MAC||Nintendo||Playstation',
-            genres: 'Arcade||Art||Augmented-Reality'
-          }
-        ]
-
+        const rawData = res.data
         const result = _.map(rawData, (item) => {
           return {
             id: item.id,
             name: item.name,
+            slug: item.slug,
             logo: filters.imageFullUrl(item.logo),
             blockchain_image: filters.imageFullUrl(item.blockchain_image),
             devices: item.devices ? item.devices.split('||') : [],
@@ -83,6 +54,43 @@ export const useBillboardStore = defineStore('billboard', {
         this._chooseGames = result
         this._chooseGamesLoading = false
       })
+    },
+
+    async loadAdverts (gameSlug) {
+      this._advertsLoading = true
+      const game = _.find(this.chooseGames, (item) => {
+        return item.slug === gameSlug
+      })
+      if (game) {
+        const gameId = game.id
+        await api.get('billboard/choose/bygame/' + gameId).then((res) => {
+          const rawData = res.data
+          if (rawData.total > 0) {
+            this._adverts_pagination = rawData.links
+            const rawItems = rawData.data
+            const result = _.map(rawItems, (item) => {
+              const type = item.type
+              item.devices = item.devices ? item.devices.split('||') : []
+
+              if (type === 1) {
+                item.logo = filters.imageFullUrl(item.logo_player_author)
+              } else if (type === 2) {
+                item.logo = filters.imageFullUrl(item.logo_game_author)
+              } else if (type === 3) {
+                item.logo = filters.imageFullUrl(item.logo_guild_author)
+              }
+
+              return item
+            })
+            this._adverts = result
+          } else {
+            this._adverts = []
+            this._adverts_pagination = []
+          }
+        })
+      }
+
+      this._advertsLoading = false
     }
   }
 })

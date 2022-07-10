@@ -24,7 +24,7 @@
 
       <div class="row">
         <div class="col-8">
-          <BillboardList @onClickNew="onClickNewBillboard" />
+          <BillboardList @onClickNew="onClickNewBillboard" :items="billboardStore.adverts" :isLoading="billboardStore.advertsLoading" :pagination="billboardStore.advertsPagination" />
         </div>
       </div>
     </div>
@@ -34,7 +34,7 @@
         <div class="modal-back-inner">
           <div class="row items-center justify-between q-mb-lg">
             <div class="col-auto">
-              <q-btn flat label="New ad" class="text-weight-medium" />
+              <q-btn flat label="New ad" icon="close" class="text-weight-medium q-px-none icon-gray" :ripple="false" />
             </div>
 
             <div>
@@ -42,33 +42,62 @@
             </div>
           </div>
 
-          <q-form class="q-gutter-md">
-            <q-input
-              filled
-              v-model="name"
-              label="Your name *"
-              hint="Name and surname"
-              lazy-rules
-              :rules="[ val => val && val.length > 0 || 'Please type something']"
-            />
+          <q-separator />
 
-            <q-input
-              filled
-              type="number"
-              v-model="age"
-              label="Your age *"
-              lazy-rules
-              :rules="[
-                val => val !== null && val !== '' || 'Please type your age',
-                val => val > 0 && val < 100 || 'Please type a real age'
-              ]"
-            />
+          <q-form class="q-gutter-md q-mt-lg">
+            <div>
+              <div class="input-label">
+                Name game
+              </div>
 
-            <q-toggle v-model="accept" label="I accept the license and terms" />
+              <!--q-select
+                clearable
+                v-model="register.player.location_id"
+                label="Location"
+                name="location_id"
+                :options="lists.locations"
+                @filter="(val, update) => filterUpdate(val, update, 'locations')"
+                use-input
+                filled
+              /-->
+
+              <q-input
+                filled
+                dense
+                placeholder='For example "Axie Infinity"'
+                v-model="name"
+              />
+            </div>
 
             <div>
-              <q-btn label="Submit" type="submit" color="primary"/>
-              <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+              <div class="input-label">
+                Content
+              </div>
+              <q-input
+                filled
+                class="default-textarea"
+                v-model="name"
+                type="textarea"
+                placeholder="Text"
+              />
+            </div>
+
+            <div class="q-mt-lg">
+              <div class="q-mb-md">
+                <div class="row items-end">
+                  <div class="col-auto ">
+                    <div class="f2 fw-500 lh08">
+                      {{standard}}
+                    </div>
+                  </div>
+                  <div class="col-auto q-ml-xs">
+                    <div class="text-grey-8 text-caption">
+                      Players
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <q-slider thumb-size="24px" v-model="standard" :min="1" :max="spot_all" />
             </div>
           </q-form>
         </div>
@@ -91,6 +120,9 @@ export default defineComponent({
     ChooseGames,
     BillboardList
   },
+  props: [
+    'game'
+  ],
   setup () {
     const appStore = useAppStore()
     const billboardStore = useBillboardStore()
@@ -102,7 +134,11 @@ export default defineComponent({
   },
   data () {
     return {
-      rightModal: false
+      search: null,
+      rightModal: false,
+      standard: 0,
+      spot_all: 10,
+      name: null
     }
   },
   methods: {
@@ -111,7 +147,15 @@ export default defineComponent({
     },
 
     async onChooseGameSelected (item) {
-      console.log(item)
+      await this.$router.push({
+        name: 'billboard-by-game',
+        params: {
+          game: item.slug
+        },
+        replace: true
+      })
+
+      await this.billboardStore.loadAdverts(item.slug)
     },
 
     async onClickNewBillboard () {

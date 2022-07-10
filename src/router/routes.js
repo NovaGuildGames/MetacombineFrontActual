@@ -3,7 +3,16 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') }
+      {
+        path: '',
+        component: () => import('pages/IndexPage.vue')
+      },
+      {
+        path: '/billboard/:game',
+        component: () => import('pages/IndexPage.vue'),
+        props: true,
+        name: 'billboard-by-game'
+      }
     ]
   },
 

@@ -8,13 +8,7 @@
       @swiper="onSwiper"
       @slideChange="onSlideChange"
     >
-      <swiper-slide v-for="item in elements" :key="item+'test1'">
-        <GameCardTpl :item="item" @selected="$emit('selected', item)" :isLoading="isLoading"/>
-      </swiper-slide>
-      <swiper-slide v-for="item in elements" :key="item+'test2'">
-        <GameCardTpl :item="item" @selected="$emit('selected', item)" :isLoading="isLoading"/>
-      </swiper-slide>
-      <swiper-slide v-for="item in elements" :key="item+'test3'">
+      <swiper-slide v-for="item in elements" :key="item">
         <GameCardTpl :item="item" @selected="$emit('selected', item)" :isLoading="isLoading"/>
       </swiper-slide>
     </swiper>
@@ -52,10 +46,10 @@ export default defineComponent({
   },
   setup () {
     const onSwiper = (swiper) => {
-      console.log(swiper)
+
     }
     const onSlideChange = () => {
-      console.log('slide change')
+
     }
     return {
       onSwiper,

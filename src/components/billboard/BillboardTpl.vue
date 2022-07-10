@@ -21,7 +21,7 @@
             <div class="row items-center">
               <div class="col-auto q-mr-md">
                 <q-avatar size="48px">
-                  <img :src="item.avatar" />
+                  <img :src="item.logo" />
                 </q-avatar>
               </div>
 

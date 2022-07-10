@@ -11,7 +11,7 @@
         class="game-card-tpl__bg abs"
         loading="lazy"
         :src="item.logo"
-        :fit="cover"
+        fit="cover"
         spinner-color="white"
       />
 
