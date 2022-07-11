@@ -16,7 +16,11 @@
           Игры
         </q-btn>
 
-        <q-btn flat no-wrap>
+        <q-btn color="primary" v-if="authStore.isLoaded && !authStore.metapass" @click="authStore.connect">
+          Connect
+        </q-btn>
+
+        <q-btn flat no-wrap v-if="authStore.isLoaded && authStore.isLoggedIn">
             <q-avatar size="2rem">
               <img src="https://cdn.quasar.dev/img/avatar3.jpg">
             </q-avatar>
@@ -25,10 +29,8 @@
             <q-menu auto-close>
               <q-list dense>
                 <q-item class="GL__menu-link-signed-in">
-                  <q-item-section>
-                    <router-link class="cursor-pointer" :to="{ name: 'register' }">
-                      Login
-                    </router-link>
+                  <q-item-section class="cursor-pointer" @click="authStore.logout">
+                    Logout
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -76,14 +78,17 @@
 
 <script>
 import { useAppStore } from 'stores/app'
+import { useAuthStore } from 'stores/app/auth'
 
 export default {
   setup () {
     const app = useAppStore()
+    const authStore = useAuthStore()
     const rightDrawerOpen = true
 
     return {
       app,
+      authStore,
       rightDrawerOpen
     }
   }

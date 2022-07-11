@@ -45,7 +45,7 @@ export const useAppStore = defineStore('app', {
 
     async initialize () {
       await this.initializeConfig()
-      authStore.initializeAuth()
+      await authStore.initializeAuth()
     }
   }
 })
