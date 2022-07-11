@@ -100,6 +100,8 @@ export const useAuthStore = defineStore('auth', {
         providerOptions,
         disableInjectedProvider: false
       })
+
+      web3Modal.clearCachedProvider()
     },
 
     async registerMetapass (formData) {
@@ -178,6 +180,7 @@ export const useAuthStore = defineStore('auth', {
       if (response.data) {
         localStorage.removeItem('auth_token')
         this._address = null
+        if (provider) provider.disconnect()
         await this.tryAuth()
       }
     },
