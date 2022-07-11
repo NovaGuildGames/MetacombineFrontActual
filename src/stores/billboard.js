@@ -72,12 +72,30 @@ export const useBillboardStore = defineStore('billboard', {
               const type = item.type
               item.devices = item.devices ? item.devices.split('||') : []
 
+              // Логотипы
+              const logos = []
+              if (item.players_logos) {
+                _.merge(logos, item.players_logos.split('||'))
+              }
+              if (item.games_logos) {
+                _.merge(logos, item.games_logos.split('||'))
+              }
+              if (item.guilds_logos) {
+                _.merge(logos, item.guilds_logos.split('||'))
+              }
+              item.logos = _.map(logos, (item) => {
+                return filters.imageFullUrl(item)
+              })
+
               if (type === 1) {
                 item.logo = filters.imageFullUrl(item.logo_player_author)
+                item.author = item.author_player
               } else if (type === 2) {
                 item.logo = filters.imageFullUrl(item.logo_game_author)
+                item.author = item.author_game
               } else if (type === 3) {
                 item.logo = filters.imageFullUrl(item.logo_guild_author)
+                item.author = item.author_guild
               }
 
               return item

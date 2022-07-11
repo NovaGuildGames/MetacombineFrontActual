@@ -28,7 +28,7 @@
               <div class="col-auto">
                 <div class="row items-center">
                   <div class="f1 font-weight-regular">
-                    {{item.user}}
+                    {{item.author}}
                   </div>
                   <div class="q-ml-xs" v-if="item.verified">
                     <q-icon name="eva-checkmark-outline" class="text-primary" />
@@ -41,17 +41,17 @@
                 </div>
 
                 <div class="text-grey-8 text-caption q-mt-xs">
-                  20 минут назад
+                  {{moment(item.created_at).fromNow()}}
                 </div>
               </div>
             </div>
           </div>
           <div class="col-auto q-ml-lg">
-            <div v-if="!item.spot_current">
+            <div v-if="!item.spots_all">
               <div class="row items-end">
                 <div class="col-auto ">
                   <div class="text-h6 text-weight-bold">
-                    {{item.spot_current}}/{{item.spot_all}}
+                    {{item.spots_all}}/{{item.spots_full}}
                   </div>
                 </div>
                 <div class="col-auto q-ml-xs">
@@ -65,10 +65,10 @@
               <div class="row items-center">
                 <div class="col-auto ">
                   <div class="text-h6 text-weight-bold">
-                    <div class="circles-wrapper" :style="{width: (item.spot_current)+'rem'}">
-                      <div class="circle-inner" v-for="(itemx, index) in item.spot_current" :key="index">
+                    <div class="circles-wrapper" :style="{width: (item.logos.length)+'rem'}">
+                      <div class="circle-inner" v-for="(itemx, index) in item.logos" :key="index">
                         <q-avatar class="circle-avatar" size="26px">
-                          <img :src="item.avatar" />
+                          <img :src="itemx" />
                         </q-avatar>
                       </div>
                     </div>
@@ -76,7 +76,7 @@
                 </div>
                 <div class="col-auto q-ml-md">
                   <div class="text-grey-8 text-caption">
-                    {{item.spot_current}}<span v-if="(item.spot_all - 1) > item.spot_current">/{{item.spot_all}}</span> Players
+                    {{item.spots_all}}<span v-if="(item.spots_all - 1) > item.spots_all">/{{item.spots_full}}</span> Players
                   </div>
                 </div>
               </div>
@@ -132,6 +132,7 @@
 </style>
 
 <script>
+const moment = require('moment')
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -140,7 +141,9 @@ export default defineComponent({
 
   },
   setup () {
-
+    return {
+      moment
+    }
   }
 })
 </script>

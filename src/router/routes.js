@@ -8,6 +8,11 @@ const routes = [
         component: () => import('pages/IndexPage.vue')
       },
       {
+        path: '/register',
+        component: () => import('pages/RegisterPage.vue'),
+        name: 'register'
+      },
+      {
         path: '/billboard/:game',
         component: () => import('pages/IndexPage.vue'),
         props: true,
