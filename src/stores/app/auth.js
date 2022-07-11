@@ -22,7 +22,8 @@ export const useAuthStore = defineStore('auth', {
     _isVerified: false,
     _address: null,
     _token: null,
-    _metapass: null
+    _metapass: null,
+    _registerErrors: null
   }),
 
   getters: {
@@ -68,6 +69,10 @@ export const useAuthStore = defineStore('auth', {
 
     token (state) {
       return state._token
+    },
+
+    registerErrors (state) {
+      return state._registerErrors
     }
   },
 
@@ -97,14 +102,29 @@ export const useAuthStore = defineStore('auth', {
       })
     },
 
+    async registerMetapass (formData) {
+      await api.post('register', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(async () => {
+        await this.tryAuth()
+      }).catch((err) => {
+        const response = err.response
+        const data = response.data
+        this._registerErrors = data
+      })
+    },
+
     async tryAuth () {
+      this._isLoading = true
       const token = localStorage.getItem('auth_token')
       const address = this.address
       this._token = token
 
       await api.post('auth/check-logged', null, {
         params: {
-          address: address
+          address
         },
         headers: {
           Authorization: 'Bearer ' + token
@@ -124,13 +144,17 @@ export const useAuthStore = defineStore('auth', {
             if (data.registered) {
               await this.login()
             } else {
+              this._isLoading = false
               this.router.push({ name: 'register' })
             }
           } else {
             if (!this._isLoaded) this._isLoaded = true
+            this._isLoading = false
           }
         }
-      }).catch(async () => { })
+      }).catch(async () => {
+        this._isLoading = false
+      })
     },
 
     async login () {
@@ -144,6 +168,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async logout () {
+      this._isLoading = true
       const response = await api.post('auth/logout', null, {
         headers: {
           'Content-Type': 'application/json',
@@ -169,8 +194,8 @@ export const useAuthStore = defineStore('auth', {
           if (err) console.log('Sign error', err)
 
           const bodyData = {
-            address: address,
-            signature: signature
+            address,
+            signature
           }
 
           const response = await api.post('web3-login-verify', JSON.stringify(bodyData), {
@@ -184,6 +209,7 @@ export const useAuthStore = defineStore('auth', {
           if (data) {
             localStorage.setItem('auth_token', data)
             self._token = data
+            this._isLoading = false
             await self.tryAuth()
           }
         }

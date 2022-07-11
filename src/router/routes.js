@@ -5,12 +5,18 @@ const routes = [
     children: [
       {
         path: '',
-        component: () => import('pages/IndexPage.vue')
+        component: () => import('pages/IndexPage.vue'),
+        name: 'index'
       },
       {
         path: '/register',
         component: () => import('pages/RegisterPage.vue'),
         name: 'register'
+      },
+      {
+        path: '/metapass',
+        component: () => import('pages/ProfilePage.vue'),
+        name: 'profile'
       },
       {
         path: '/billboard/:game',

@@ -3,7 +3,7 @@
 
     <q-header class="bg-white text-black">
       <q-toolbar class="q-pa-md">
-        <q-toolbar-title class="row items-center">
+        <q-toolbar-title class="row items-center cursor-pointer" @click="$router.push({ name: 'index' })">
           <q-avatar rounded size="1.75rem">
             <img :src="require('src/assets/logo2.png')">
           </q-avatar>
@@ -28,6 +28,11 @@
 
             <q-menu auto-close>
               <q-list dense>
+                <q-item class="GL__menu-link-signed-in">
+                  <q-item-section class="cursor-pointer" @click="gotoProfile">
+                    Metapass
+                  </q-item-section>
+                </q-item>
                 <q-item class="GL__menu-link-signed-in">
                   <q-item-section class="cursor-pointer" @click="authStore.logout">
                     Logout
@@ -90,6 +95,11 @@ export default {
       app,
       authStore,
       rightDrawerOpen
+    }
+  },
+  methods: {
+    async gotoProfile () {
+      await this.$router.push({ name: 'profile' })
     }
   }
 }

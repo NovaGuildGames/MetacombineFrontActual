@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia'
 const config = require('src/boot/app.config.js')
+import { api } from 'src/boot/axios.js'
 
 import { useAuthStore } from './app/auth'
 const authStore = useAuthStore()
 
 export const useAppStore = defineStore('app', {
   state: () => ({
+    _lists: {},
     _config: {
       infura_key: null
     },
@@ -23,6 +25,10 @@ export const useAppStore = defineStore('app', {
   }),
 
   getters: {
+    lists (state) {
+      return state._lists
+    },
+
     config (state) {
       return state._config
     },
@@ -33,6 +39,16 @@ export const useAppStore = defineStore('app', {
   },
 
   actions: {
+    async loadList (key, val) {
+      await api.get(`lists/${key}`, {
+        params: {
+          query: val
+        }
+      }).then(async (res) => {
+        this._lists[key] = res.data || []
+      })
+    },
+
     async add () {
       this._slides.push({
         name: 'Slide 5'
