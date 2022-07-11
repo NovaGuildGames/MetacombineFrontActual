@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh lpR fff">
-
+    <q-ajax-bar />
     <q-header class="bg-white text-black">
       <q-toolbar class="q-pa-md">
         <q-toolbar-title class="row items-center cursor-pointer" @click="$router.push({ name: 'index' })">
