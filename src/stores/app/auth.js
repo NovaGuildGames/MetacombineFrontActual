@@ -111,7 +111,7 @@ export const useAuthStore = defineStore('auth', {
         }
       }).then(async () => {
         await this.tryAuth()
-      }).catch((err) => {
+      }).catch(async (err) => {
         const response = err.response
         const data = response.data
         this._registerErrors = data

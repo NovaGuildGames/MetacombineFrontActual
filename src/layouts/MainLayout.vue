@@ -11,7 +11,7 @@
           </div>
         </q-toolbar-title>
 
-        <q-btn flat>
+        <q-btn flat v-show="false">
           Игры
         </q-btn>
 

@@ -5,10 +5,10 @@
         <div class="text-h3">
           Games
         </div>
-        <q-btn :ripple="false" flat rounded color="primary" class="text-bold" label="All games" />
+        <!--q-btn :ripple="false" flat rounded color="primary" class="text-bold" label="All games" /-->
       </div>
 
-      <div class="q-mb-md">
+      <!--div class="q-mb-md">
         <q-input
           v-model="search"
           debounce="500"
@@ -18,7 +18,7 @@
             <q-icon name="eva-search-outline" color="grey-5" />
           </template>
         </q-input>
-      </div>
+      </div-->
 
       <ChooseGames :items="billboardStore.chooseGames" :isLoading="billboardStore.chooseGamesLoading" @selected="onChooseGameSelected" />
 
@@ -29,16 +29,16 @@
       </div>
     </div>
 
-    <q-dialog v-model="rightModal" :seamless="true" class="modal-default" :square="true" position="right" full-height>
+    <q-dialog v-model="rightModal" class="modal-default" :square="true" position="right" full-height>
       <div class="modal-back">
         <div class="modal-back-inner">
           <div class="row items-center justify-between q-mb-lg">
             <div class="col-auto">
-              <q-btn flat label="New ad" icon="close" class="text-weight-medium q-px-none icon-gray" :ripple="false" />
+              <q-btn flat label="New ad" icon="close" class="text-weight-medium q-px-none icon-gray" :ripple="false" @click="rightModal = false" />
             </div>
 
             <div>
-              <q-btn label="Publish" color="primary" class="text-weight-medium" />
+              <q-btn label="Publish" color="primary" class="text-weight-medium" @click="publishBillboard" />
             </div>
           </div>
 
@@ -61,12 +61,14 @@
                 filled
               /-->
 
-              <q-input
+              <!--q-input
                 filled
                 dense
                 placeholder='For example "Axie Infinity"'
                 v-model="name"
-              />
+              /-->
+
+              <q-select filled dense :map-options="true" :emit-value="true" v-model="billboard.game_id" :options="billboardStore.listGames" required />
             </div>
 
             <div>
@@ -76,7 +78,7 @@
               <q-input
                 filled
                 class="default-textarea"
-                v-model="name"
+                v-model="billboard.name"
                 type="textarea"
                 placeholder="Text"
               />
@@ -87,7 +89,7 @@
                 <div class="row items-end">
                   <div class="col-auto ">
                     <div class="f2 fw-500 lh08">
-                      {{standard}}
+                      {{billboard.spots_all}}
                     </div>
                   </div>
                   <div class="col-auto q-ml-xs">
@@ -97,7 +99,7 @@
                   </div>
                 </div>
               </div>
-              <q-slider thumb-size="24px" v-model="standard" :min="1" :max="spot_all" />
+              <q-slider thumb-size="24px" v-model="billboard.spots_all" :min="1" :max="spots_total" />
             </div>
           </q-form>
         </div>
@@ -136,12 +138,20 @@ export default defineComponent({
     return {
       search: null,
       rightModal: false,
-      standard: 0,
-      spot_all: 10,
-      name: null
+      billboard_default: null,
+      spots_total: 10,
+      billboard: {
+        game_id: null,
+        name: null,
+        spots_all: 1
+      }
     }
   },
   methods: {
+    async publishBillboard () {
+      await this.billboardStore.publish(this.billboard)
+    },
+
     async add () {
       await this.appStore.add()
     },
@@ -162,8 +172,39 @@ export default defineComponent({
       this.rightModal = true
     }
   },
+  watch: {
+    async $route (to, from) {
+      if (to.name === 'billboard-by-game') {
+        const slug = to.params.game
+        await this.billboardStore.loadAdverts(slug)
+      }
+    },
+
+    async 'billboardStore.selectedGame' (val) {
+      if (val) {
+        this.billboard.game_id = val.id
+      }
+    },
+
+    async 'billboardStore.published' (newVal, oldVal) {
+      if (newVal && !oldVal) {
+        this.rightModal = false
+      }
+    }
+  },
   async mounted () {
     await this.billboardStore.loadChooseGames()
+    if (this.game) {
+      await this.billboardStore.loadAdverts(this.game)
+    } else {
+      const games = this.billboardStore.chooseGames
+      if (games) {
+        const firstGame = games[0]
+        await this.billboardStore.loadAdverts(firstGame.slug)
+      }
+    }
+
+    this.billboard_default = JSON.parse(JSON.stringify(this.billboard))
   }
 })
 </script>

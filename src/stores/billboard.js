@@ -5,6 +5,8 @@ import _ from 'lodash'
 
 export const useBillboardStore = defineStore('billboard', {
   state: () => ({
+    _published: false,
+    _selectedGame: null,
     _chooseGames: [],
     _chooseGamesLoading: false,
     _advertsLoading: false,
@@ -13,6 +15,10 @@ export const useBillboardStore = defineStore('billboard', {
   }),
 
   getters: {
+    published (state) {
+      return state._published
+    },
+
     chooseGames (state) {
       return state._chooseGames
     },
@@ -31,10 +37,42 @@ export const useBillboardStore = defineStore('billboard', {
 
     advertsPagination (state) {
       return state._adverts_pagination
+    },
+
+    selectedGame (state) {
+      return state._selectedGame
+    },
+
+    listGames (state) {
+      const games = state._chooseGames
+      const result = _.map(games, (item) => {
+        return {
+          label: item.name,
+          value: item.id
+        }
+      })
+      return result
     }
   },
 
   actions: {
+    async publish (data) {
+      this._published = false
+      data.additional_info = data.name
+      data.name = data.name.slice(0, 100)
+
+      await api.post('billboard/add/advert', null, {
+        params: data
+      }).then(async (res) => {
+        if (this.selectedGame) {
+          this._published = true
+          this.loadAdverts(this.selectedGame.slug)
+        }
+      }).catch(async (err) => {
+        console.log('err', err)
+      })
+    },
+
     async loadChooseGames () {
       this._chooseGamesLoading = true
       await api.get('billboard/choose/games').then((res) => {
@@ -62,6 +100,7 @@ export const useBillboardStore = defineStore('billboard', {
         return item.slug === gameSlug
       })
       if (game) {
+        this._selectedGame = game
         const gameId = game.id
         await api.get('billboard/choose/bygame/' + gameId).then((res) => {
           const rawData = res.data

@@ -47,11 +47,11 @@
             </div>
           </div>
           <div class="col-auto q-ml-lg">
-            <div v-if="!item.spots_all">
+            <div v-if="!item.spots_full">
               <div class="row items-end">
                 <div class="col-auto ">
                   <div class="text-h6 text-weight-bold">
-                    {{item.spots_all}}/{{item.spots_full}}
+                    0/{{item.spots_all}}
                   </div>
                 </div>
                 <div class="col-auto q-ml-xs">
@@ -76,7 +76,7 @@
                 </div>
                 <div class="col-auto q-ml-md">
                   <div class="text-grey-8 text-caption">
-                    {{item.spots_all}}<span v-if="(item.spots_all - 1) > item.spots_all">/{{item.spots_full}}</span> Players
+                    {{item.spots_full}}<span v-if="(item.spots_full - 1) > item.spots_full">/{{item.spots_all}}</span> Players
                   </div>
                 </div>
               </div>
@@ -92,7 +92,7 @@
           {{item.text}}
         </div>
 
-        <div class="q-mt-md">
+        <div v-if="showButtons" class="q-mt-md">
           <q-btn color="secondary" size="md" class="text-black" unelevated label="Начать игру" />
           <q-btn flat color="primary" class="q-ml-md" size="md" label="Скопировать Discord ссылку" />
         </div>
@@ -136,7 +136,7 @@ const moment = require('moment')
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  props: ['item', 'isLoading'],
+  props: ['item', 'isLoading', 'showButtons'],
   components: {
 
   },

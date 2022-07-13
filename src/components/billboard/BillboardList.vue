@@ -3,21 +3,36 @@
     <div class="row items-center">
       <div class="col">
         <h3 class="text-h3">
-          Go Play
+          <span v-if="billboardStore.selectedGame">
+            {{billboardStore.selectedGame.name}}
+          </span>
         </h3>
       </div>
-      <div>
+      <div class="col-auto" v-if="authStore.isLoggedIn">
         <q-btn color="primary" @click="$emit('onClickNew')">
           <q-icon name="fa-solid fa-plus" class="q-mr-xs" /> New
         </q-btn>
       </div>
     </div>
 
-    <FilterTags class="card-md" :items="['Игра', 'Online', 'Big party', 'Last player', 'Фильтр']" @click="onFilterSelect" />
+    <FilterTags v-if="false" class="card-md" :items="['Игра', 'Online', 'Big party', 'Last player', 'Фильтр']" @click="onFilterSelect" />
 
     <div class="q-mt-lg">
-      <div class="card-md" v-for="item in items" :key="item">
-        <BillboardTpl :item="item" :isLoading="isLoading" />
+      <div v-if="!isLoading">
+        <div v-if="items.length > 0">
+          <div class="card-md" v-for="item in items" :key="item">
+            <BillboardTpl :item="item" :isLoading="isLoading" :showButtons="authStore.isLoggedIn" />
+          </div>
+        </div>
+        <div v-else>
+          <h4>Нет объявление в этой игре</h4>
+        </div>
+      </div>
+      <div v-else>
+        <q-spinner
+          color="primary"
+          size="5em"
+        />
       </div>
     </div>
 
@@ -33,6 +48,8 @@
 
 <script>
 import BillboardTpl from './BillboardTpl'
+import { useAuthStore } from 'stores/app/auth'
+import { useBillboardStore } from 'stores/billboard'
 import Pagination from 'src/components/common/Pagination'
 import FilterTags from './FilterTags'
 import { defineComponent } from 'vue'
@@ -44,6 +61,15 @@ export default defineComponent({
     BillboardTpl,
     FilterTags,
     Pagination
+  },
+  setup () {
+    const authStore = useAuthStore()
+    const billboardStore = useBillboardStore()
+
+    return {
+      authStore,
+      billboardStore
+    }
   },
   methods: {
     onFilterSelect (item) {
