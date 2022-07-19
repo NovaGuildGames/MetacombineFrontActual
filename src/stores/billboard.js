@@ -75,7 +75,7 @@ export const useBillboardStore = defineStore('billboard', {
 
     async loadChooseGames () {
       this._chooseGamesLoading = true
-      await api.get('billboard/choose/games').then((res) => {
+      await api.post('billboard/choose/games').then((res) => {
         const rawData = res.data
         const result = _.map(rawData, (item) => {
           return {
@@ -102,7 +102,7 @@ export const useBillboardStore = defineStore('billboard', {
       if (game) {
         this._selectedGame = game
         const gameId = game.id
-        await api.get('billboard/choose/bygame/' + gameId).then((res) => {
+        await api.post('billboard/choose/bygame/' + gameId).then((res) => {
           const rawData = res.data
           if (rawData.total > 0) {
             this._adverts_pagination = rawData.links
