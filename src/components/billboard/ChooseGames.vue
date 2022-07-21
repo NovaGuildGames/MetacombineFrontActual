@@ -1,15 +1,21 @@
 <template>
   <div class="q-my-lg q-py-lg">
     <swiper
-      :slidesPerView="'auto'"
-      :spaceBetween="43"
+      :slidesPerView="6"
+      :spaceBetween="38"
       :draggable="true"
       :mousewheel="{forceToAxis: true}"
-      @swiper="onSwiper"
-      @slideChange="onSlideChange"
+      :modules="modules"
+      :virtual="{
+        addSlidesBefore: 4,
+        addSlidesAfter: 6,
+        cache: true,
+        enabled: true
+      }"
+      @reachEnd="onReachEnd"
     >
-      <swiper-slide v-for="item in elements" :key="item">
-        <GameCardTpl :item="item" @selected="$emit('selected', item)" :isLoading="isLoading"/>
+      <swiper-slide v-for="item in elements" :key="item.id" :virtualIndex="item.id">
+        <GameCardTpl :item="item" @selected="$emit('selected', item)" :isLoading="billboardStore.chooseGamesLoading" />
       </swiper-slide>
     </swiper>
   </div>
@@ -26,18 +32,18 @@
 </style>
 
 <script>
-const SKELETON_COUNT = 3
+const SKELETON_COUNT = 16
 
+import { useBillboardStore } from 'stores/billboard'
 import GameCardTpl from 'components/games/GameCardTpl'
 import { defineComponent } from 'vue'
 
-import { Navigation } from 'swiper'
+import { Navigation, Virtual } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/navigation'
 
 export default defineComponent({
-  props: ['items', 'isLoading'],
   emits: ['selected'],
   components: {
     GameCardTpl,
@@ -45,24 +51,29 @@ export default defineComponent({
     SwiperSlide
   },
   setup () {
-    const onSwiper = (swiper) => {
+    const billboardStore = useBillboardStore()
 
-    }
-    const onSlideChange = () => {
-
-    }
     return {
-      onSwiper,
-      onSlideChange,
-      modules: [Navigation]
+      billboardStore,
+      modules: [Navigation, Virtual]
+    }
+  },
+  data () {
+    return {
+      swiper: null
+    }
+  },
+  methods: {
+    async onReachEnd () {
+      await this.billboardStore.loadChooseGames(true)
     }
   },
   computed: {
     elements () {
-      if (this.isLoading) {
+      if (this.billboardStore.chooseGamesLoading) {
         return Array.from(Array(SKELETON_COUNT).keys())
       } else {
-        return this.items
+        return this.billboardStore.chooseGames
       }
     }
   }
