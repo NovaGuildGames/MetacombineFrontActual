@@ -5,10 +5,12 @@ import _ from 'lodash'
 
 export const useBillboardStore = defineStore('billboard', {
   state: () => ({
+    _search: null,
     _published: false,
     _selectedGame: null,
     _chooseGames: [],
-    _chooseGamesLoading: false,
+    _chooseGamesNext: null,
+    _chooseGamesLoading: true,
     _advertsLoading: false,
     _adverts: [],
     _adverts_pagination: []
@@ -21,6 +23,10 @@ export const useBillboardStore = defineStore('billboard', {
 
     chooseGames (state) {
       return state._chooseGames
+    },
+
+    chooseGamesPrev (state) {
+      return state._chooseGamesPrev
     },
 
     chooseGamesLoading (state) {
@@ -56,6 +62,53 @@ export const useBillboardStore = defineStore('billboard', {
   },
 
   actions: {
+    async search (val) {
+      this._search = val
+      await this.loadChooseGames()
+    },
+
+    async loadChooseGames (append) {
+      let url = 'billboard/choose/games'
+      if (append) {
+        if (this._chooseGames.length <= 0) return
+        url = this._chooseGamesNext
+      } else {
+        this._chooseGamesLoading = true
+      }
+
+      await api.post(url, null, {
+        params: {
+          search: this._search
+        },
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }).then((res) => {
+        this._chooseGamesNext = res.data.next_page_url
+        let result = res.data.data
+
+        result = _.map(result, (item) => {
+          return {
+            id: item.id,
+            name: item.name,
+            slug: item.slug,
+            logo: filters.imageFullUrl(item.logo),
+            blockchain_image: filters.imageFullUrl(item.blockchain_image),
+            devices: _.isString(item.devices) ? item.devices.split('||') : [],
+            genres: _.isString(item.genres) ? item.genres.split('||') : []
+          }
+        })
+
+        if (append) {
+          this._chooseGames = _.union(this._chooseGames, result)
+        } else {
+          this._chooseGames = result
+          this._chooseGamesLoading = false
+        }
+      })
+    },
+
     async publish (data) {
       this._published = false
       data.additional_info = data.name
@@ -70,27 +123,6 @@ export const useBillboardStore = defineStore('billboard', {
         }
       }).catch(async (err) => {
         console.log('err', err)
-      })
-    },
-
-    async loadChooseGames () {
-      this._chooseGamesLoading = true
-      await api.get('billboard/choose/games').then((res) => {
-        const rawData = res.data
-        const result = _.map(rawData, (item) => {
-          return {
-            id: item.id,
-            name: item.name,
-            slug: item.slug,
-            logo: filters.imageFullUrl(item.logo),
-            blockchain_image: filters.imageFullUrl(item.blockchain_image),
-            devices: item.devices ? item.devices.split('||') : [],
-            genres: item.genres ? item.genres.split('||') : []
-          }
-        })
-
-        this._chooseGames = result
-        this._chooseGamesLoading = false
       })
     },
 
