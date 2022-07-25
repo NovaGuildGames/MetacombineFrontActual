@@ -2,28 +2,23 @@
   <q-page class="q-pt-lg overflow-hidden">
     <div class="container">
       <div v-if="authStore.metapass">
-        <div class="profile row">
+        <div class="profile">
           <div class="profile__logo">
-            <img src="../../public/icons/avatar.png" alt="avatar">
+            <img src="../../public/icons/profile.png" alt="avatar">
           </div>
           <div class="profile__menu">
             <p class="profile__nickname">Maksonic</p>
-            <p class="profile__language">Английский, русский</p>
-
-            <div class="profile__achievements">
-              <span>NFT</span>
-              <div class="profile__achievements-wrap row">
-                <div class="profile__achievements-item">
-                  <img src="../../public/icons/Frame1.svg" alt="ачивка">
-                </div>
-                <div class="profile__achievements-item">
-                  <img src="../../public/icons/Frame2.svg" alt="ачивка">
-                </div>
-                <div class="profile__achievements-item">
-                  <img src="../../public/icons/Frame3.svg" alt="ачивка">
-                </div>
-              </div>
+            <div class="profile__discord row">
+              <div class="profile__discord-icons"><img src="../../public/icons/discord.svg" alt="discord-icons"></div>
+              <p class="profile__discord-nickname">Ekimka#5658</p>
             </div>
+            <div class="profile__language row">
+              <span>Языки:</span>
+              <p>Английский, русский</p>
+            </div>
+            <p class="profile__about">
+            Download Discord 12 SVG vector file in monocolor and multicolor type for Sketch or Illustrator from Discord 12 Vectors svg vector collection. Discord 12 Vectors SVG vector illustration graphic
+            </p>
           </div>
         </div>
         <!-- /.profile -->

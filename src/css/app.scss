@@ -1,5 +1,10 @@
 @import './fonts.scss';
 
+p {
+  padding: 0;
+  margin: 0;
+}
+
 .q-field--standard .q-field__control:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
@@ -12,15 +17,6 @@
 .q-btn {
   box-sizing: border-box;
   text-transform: none !important;
-}
-
-.select-field {
-  font-size: 12px !important;
-  font-weight: 600;
-
-  .q-field__control {
-    border-radius: 1.75rem;
-  }
 }
 
 .q-card {
@@ -161,4 +157,62 @@
     right: 0px;
     padding-top: 50px;
   }
+}
+
+.profile {
+  display: flex;
+  padding: 75px 0 25px 0;
+  border-bottom: 1px solid #EEEEEE;
+  &__discord {
+    margin-top: 10px;
+    &-nickname {
+      margin-left: 7px;
+    }
+  }
+  &__logo {
+    img {
+      max-width: 240px;
+      border-radius: 50%;
+      height: 240px;
+    }
+  }
+  &__about {
+    margin-top: 24px;
+  }
+
+  &__menu {
+    padding: 36px 0 0 40px;
+    color: rgba(0, 0, 0, 0.5);
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 100%;
+  }
+
+  &__language {
+    margin-top: 10px;
+  }
+
+  &__achievements {
+    margin-top: 24px;
+    & span {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 100%;
+    }
+    &-wrap {
+      margin-top: 12px;
+    }
+    
+  }
+
+  &__nickname {
+    color: #000;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 100%;
+  }
+  
 }
