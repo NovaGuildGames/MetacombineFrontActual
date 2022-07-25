@@ -151,7 +151,7 @@ export const useBillboardStore = defineStore('billboard', {
         } else {
           this._chooseGames = result
           if (!this._selectedGame) {
-            this._selectedGame = _.head(result)
+            await this.setCurrentGame(_.head(result))
             await this.loadAdverts()
           }
 
@@ -170,7 +170,7 @@ export const useBillboardStore = defineStore('billboard', {
       }).then(async (res) => {
         if (this.selectedGame) {
           this._published = true
-          this.loadAdverts(this.selectedGame.slug)
+          await this.loadAdverts()
         }
       }).catch(async (err) => {
         console.log('err', err)
@@ -179,7 +179,7 @@ export const useBillboardStore = defineStore('billboard', {
 
     async setCurrentGame (item) {
       this._selectedGame = item
-      await appStore.setList('games', [{
+      appStore.setList('games', [{
         value: item.id,
         label: item.name
       }])
