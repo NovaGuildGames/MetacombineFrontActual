@@ -8,9 +8,10 @@
         <!--q-btn :ripple="false" flat rounded color="primary" class="text-bold" label="All games" /-->
       </div>
 
-      <!--div class="q-mb-md">
+      <div class="q-mb-md">
         <q-input
           v-model="search"
+          clearable
           debounce="500"
           placeholder="Search game"
         >
@@ -18,9 +19,9 @@
             <q-icon name="eva-search-outline" color="grey-5" />
           </template>
         </q-input>
-      </div-->
+      </div>
 
-      <ChooseGames :items="billboardStore.chooseGames" :isLoading="billboardStore.chooseGamesLoading" @selected="onChooseGameSelected" />
+      <ChooseGames @selected="onChooseGameSelected" />
 
       <div class="row">
         <div class="col-8">
@@ -178,6 +179,10 @@ export default defineComponent({
         const slug = to.params.game
         await this.billboardStore.loadAdverts(slug)
       }
+    },
+
+    async search (val) {
+      this.billboardStore.search(val)
     },
 
     async 'billboardStore.selectedGame' (val) {
