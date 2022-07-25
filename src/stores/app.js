@@ -39,8 +39,12 @@ export const useAppStore = defineStore('app', {
   },
 
   actions: {
+    async setList (key, val) {
+      this._lists[key] = val
+    },
+
     async loadList (key, val) {
-      await api.post(`lists/${key}`, {
+      await api.get(`lists/${key}`, {
         params: {
           query: val
         }

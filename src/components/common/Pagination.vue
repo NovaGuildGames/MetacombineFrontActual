@@ -21,6 +21,7 @@
 </style>
 
 <script>
+
 export default {
   props: ['links'],
   emits: ['onPaginate'],
@@ -39,10 +40,7 @@ export default {
       }
     },
     detectShow (item) {
-      if (item.label === 'pagination.previous') {
-        return false
-      }
-
+      if (!item.url) return false
       return true
     },
     detectIcon (item) {

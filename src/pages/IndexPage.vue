@@ -8,20 +8,22 @@
         <!--q-btn :ripple="false" flat rounded color="primary" class="text-bold" label="All games" /-->
       </div>
 
-      <div class="q-mb-md">
-        <q-input
-          v-model="search"
-          clearable
-          debounce="500"
-          placeholder="Search game"
-        >
-          <template v-slot:prepend>
-            <q-icon name="eva-search-outline" color="grey-5" />
-          </template>
-        </q-input>
-      </div>
+      <template v-if="!billboardStore.advertsFirstPage">
+        <div class="q-mb-md">
+          <q-input
+            v-model="search"
+            clearable
+            debounce="500"
+            placeholder="Search game"
+          >
+            <template v-slot:prepend>
+              <q-icon name="eva-search-outline" color="grey-5" />
+            </template>
+          </q-input>
+        </div>
 
-      <ChooseGames @selected="onChooseGameSelected" />
+        <ChooseGames @selected="onChooseGameSelected" />
+      </template>
 
       <div class="row">
         <div class="col-8">
@@ -48,28 +50,39 @@
           <q-form class="q-gutter-md q-mt-lg">
             <div>
               <div class="input-label">
+                Language
+              </div>
+
+              <q-select filled dense :map-options="true" :emit-value="true" v-model="billboard.language_id" :options="billboardStore.langs" required />
+            </div>
+
+            <div>
+              <div class="input-label">
                 Name game
               </div>
 
-              <!--q-select
-                clearable
-                v-model="register.player.location_id"
-                label="Location"
-                name="location_id"
-                :options="lists.locations"
-                @filter="(val, update) => filterUpdate(val, update, 'locations')"
-                use-input
-                filled
-              /-->
+              <q-select filled dense :map-options="true" :emit-value="true" v-model="billboard.game_id" :options="appStore.lists.games" @filter="(val, update) => filterUpdate(val, update, 'games')" use-input required />
+            </div>
 
-              <!--q-input
-                filled
-                dense
-                placeholder='For example "Axie Infinity"'
-                v-model="name"
-              /-->
+            <div>
+              <div class="input-label">
+                Options
+              </div>
 
-              <q-select filled dense :map-options="true" :emit-value="true" v-model="billboard.game_id" :options="billboardStore.listGames" required />
+              <q-toggle
+                v-model="billboard.nft"
+                label="NFT"
+              />
+
+              <q-toggle
+                v-model="billboard.f2p"
+                label="F2P"
+              />
+
+              <q-toggle
+                v-model="billboard.p2e"
+                label="P2E"
+              />
             </div>
 
             <div>
@@ -110,6 +123,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import ChooseGames from 'components/billboard/ChooseGames'
 import BillboardList from 'components/billboard/BillboardList'
 import { useBillboardStore } from 'stores/billboard'
@@ -143,14 +157,29 @@ export default defineComponent({
       spots_total: 10,
       billboard: {
         game_id: null,
+        language_id: 44,
+        nft: false,
+        p2e: false,
+        f2p: false,
         name: null,
         spots_all: 1
       }
     }
   },
   methods: {
+    async filterUpdate (val, update, key) {
+      update(async () => {
+        this.appStore.loadList(key, val)
+      })
+    },
+
     async publishBillboard () {
       await this.billboardStore.publish(this.billboard)
+      const defaultObj = window.billboard_default
+      _.each(defaultObj, (val, key) => {
+        if (key === 'game_id') return
+        this.billboard[key] = val
+      })
     },
 
     async add () {
@@ -158,6 +187,7 @@ export default defineComponent({
     },
 
     async onChooseGameSelected (item) {
+      /*
       await this.$router.push({
         name: 'billboard-by-game',
         params: {
@@ -165,8 +195,10 @@ export default defineComponent({
         },
         replace: true
       })
+      */
 
-      await this.billboardStore.loadAdverts(item.slug)
+      await this.billboardStore.setCurrentGame(item)
+      await this.billboardStore.loadAdverts()
     },
 
     async onClickNewBillboard () {
@@ -174,12 +206,14 @@ export default defineComponent({
     }
   },
   watch: {
+    /*
     async $route (to, from) {
       if (to.name === 'billboard-by-game') {
         const slug = to.params.game
         await this.billboardStore.loadAdverts(slug)
       }
     },
+    */
 
     async search (val) {
       this.billboardStore.search(val)
@@ -198,18 +232,8 @@ export default defineComponent({
     }
   },
   async mounted () {
+    window.billboard_default = JSON.parse(JSON.stringify(this.billboard))
     await this.billboardStore.loadChooseGames()
-    if (this.game) {
-      await this.billboardStore.loadAdverts(this.game)
-    } else {
-      const games = this.billboardStore.chooseGames
-      if (games) {
-        const firstGame = games[0]
-        await this.billboardStore.loadAdverts(firstGame.slug)
-      }
-    }
-
-    this.billboard_default = JSON.parse(JSON.stringify(this.billboard))
   }
 })
 </script>
