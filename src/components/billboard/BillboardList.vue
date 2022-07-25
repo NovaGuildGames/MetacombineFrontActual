@@ -1,21 +1,21 @@
 <template>
   <div>
-    <div class="row items-center">
-      <div class="col">
-        <h3 class="text-h3">
-          <span v-if="billboardStore.selectedGame">
-            {{billboardStore.selectedGame.name}}
-          </span>
-        </h3>
+    <template v-if="!billboardStore.advertsFirstPage">
+      <div class="row items-center">
+        <div class="col">
+          <h3 class="text-h3">
+            Go Play
+          </h3>
+        </div>
+        <div class="col-auto" v-if="authStore.isLoggedIn">
+          <q-btn color="primary" @click="$emit('onClickNew')">
+            <q-icon name="fa-solid fa-plus" class="q-mr-xs" /> New
+          </q-btn>
+        </div>
       </div>
-      <div class="col-auto" v-if="authStore.isLoggedIn">
-        <q-btn color="primary" @click="$emit('onClickNew')">
-          <q-icon name="fa-solid fa-plus" class="q-mr-xs" /> New
-        </q-btn>
-      </div>
-    </div>
 
-    <FilterTags v-if="false" class="card-md" :items="['Игра', 'Online', 'Big party', 'Last player', 'Фильтр']" @click="onFilterSelect" />
+      <FilterTags />
+    </template>
 
     <div class="q-mt-lg">
       <div v-if="!isLoading">
@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <Pagination :links="pagination" :isLoading="isLoading" />
+    <Pagination :links="pagination" :isLoading="isLoading" @onPaginate="onPaginate" />
   </div>
 </template>
 
@@ -72,8 +72,8 @@ export default defineComponent({
     }
   },
   methods: {
-    onFilterSelect (item) {
-      console.log(item)
+    onPaginate (url) {
+      this.billboardStore.loadAdverts(url)
     }
   }
 })

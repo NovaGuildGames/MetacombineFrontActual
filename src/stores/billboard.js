@@ -3,8 +3,33 @@ import { api } from 'src/boot/axios.js'
 import { filters } from 'boot/filters'
 import _ from 'lodash'
 
+import { useAppStore } from 'src/stores/app'
+const appStore = useAppStore()
+
 export const useBillboardStore = defineStore('billboard', {
   state: () => ({
+    _langs: [{
+      label: 'English',
+      value: 44
+    }, {
+      label: 'Russian',
+      value: 137
+    }, {
+      label: 'Deutch',
+      value: 55
+    }],
+    _game_types: [{
+      label: 'NFT',
+      value: 'nft'
+    }, {
+      label: 'P2E',
+      value: 'p2e'
+    }, {
+      label: 'F2P',
+      value: 'f2p'
+    }],
+    _advertsFirstPage: false,
+    _filter: {},
     _search: null,
     _published: false,
     _selectedGame: null,
@@ -17,6 +42,22 @@ export const useBillboardStore = defineStore('billboard', {
   }),
 
   getters: {
+    advertsFirstPage (state) {
+      return state._advertsFirstPage
+    },
+
+    langs (state) {
+      return state._langs
+    },
+
+    game_types (state) {
+      return state._game_types
+    },
+
+    filter (state) {
+      return state._filter
+    },
+
     published (state) {
       return state._published
     },
@@ -62,6 +103,11 @@ export const useBillboardStore = defineStore('billboard', {
   },
 
   actions: {
+    async updateFilter (val) {
+      this._filter = val
+      await this.loadAdverts()
+    },
+
     async search (val) {
       this._search = val
       await this.loadChooseGames()
@@ -84,7 +130,7 @@ export const useBillboardStore = defineStore('billboard', {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         }
-      }).then((res) => {
+      }).then(async (res) => {
         this._chooseGamesNext = res.data.next_page_url
         let result = res.data.data
 
@@ -104,6 +150,11 @@ export const useBillboardStore = defineStore('billboard', {
           this._chooseGames = _.union(this._chooseGames, result)
         } else {
           this._chooseGames = result
+          if (!this._selectedGame) {
+            this._selectedGame = _.head(result)
+            await this.loadAdverts()
+          }
+
           this._chooseGamesLoading = false
         }
       })
@@ -126,15 +177,36 @@ export const useBillboardStore = defineStore('billboard', {
       })
     },
 
-    async loadAdverts (gameSlug) {
+    async setCurrentGame (item) {
+      this._selectedGame = item
+      await appStore.setList('games', [{
+        value: item.id,
+        label: item.name
+      }])
+    },
+
+    async loadAdverts (url) {
       this._advertsLoading = true
-      const game = _.find(this.chooseGames, (item) => {
-        return item.slug === gameSlug
-      })
+
+      const game = this._selectedGame
       if (game) {
         this._selectedGame = game
         const gameId = game.id
-        await api.get('billboard/choose/bygame/' + gameId).then((res) => {
+
+        // Для фильтрации
+        let params = {}
+        if (gameId) {
+          params.game_id = gameId
+        }
+        params = _.merge(params, this._filter)
+
+        let targetUrl = 'billboard/adverts'
+        if (url) {
+          targetUrl = url
+        }
+        await api.post(targetUrl, null, {
+          params
+        }).then((res) => {
           const rawData = res.data
           if (rawData.total > 0) {
             this._adverts_pagination = rawData.links
@@ -172,7 +244,13 @@ export const useBillboardStore = defineStore('billboard', {
               return item
             })
             this._adverts = result
+            if (rawData.current_page > 1) {
+              this._advertsFirstPage = true
+            } else {
+              this._advertsFirstPage = false
+            }
           } else {
+            this._advertsFirstPage = false
             this._adverts = []
             this._adverts_pagination = []
           }
