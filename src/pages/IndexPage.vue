@@ -52,7 +52,7 @@
                 </div>
               </div>
               <div v-else>
-                <h4>Нет объявление в этой игре</h4>
+                <h4>No results</h4>
               </div>
             </div>
             <div v-else>
