@@ -27,106 +27,60 @@
 
       <div class="row">
         <div class="col-8">
-          <BillboardList @onClickNew="onClickNewBillboard" :items="billboardStore.adverts" :isLoading="billboardStore.advertsLoading" :pagination="billboardStore.advertsPagination" />
-        </div>
-      </div>
-    </div>
-
-    <q-dialog v-model="rightModal" class="modal-default" :square="true" position="right" full-height>
-      <div class="modal-back">
-        <div class="modal-back-inner">
-          <div class="row items-center justify-between q-mb-lg">
-            <div class="col-auto">
-              <q-btn flat label="New ad" icon="close" class="text-weight-medium q-px-none icon-gray" :ripple="false" @click="rightModal = false" />
+          <template v-if="!billboardStore.advertsFirstPage">
+            <div class="row items-center">
+              <div class="col">
+                <h3 class="text-h3">
+                  Go play
+                </h3>
+              </div>
+              <div class="col-auto" v-if="authStore.isLoggedIn">
+                <q-btn color="primary" @click="onClickNewBillboard">
+                  <q-icon name="fa-solid fa-plus" class="q-mr-xs" /> New
+                </q-btn>
+              </div>
             </div>
 
-            <div>
-              <q-btn label="Publish" color="primary" class="text-weight-medium" @click="publishBillboard" />
+            <FilterTags :filters="['game', 'lang', 'game_type', 'android', 'ios', 'desktop', 'reset']" />
+          </template>
+
+          <div class="q-mt-lg">
+            <div v-if="!billboardStore.advertsLoading">
+              <div v-if="billboardStore.adverts.length > 0">
+                <div class="card-md" v-for="item in billboardStore.adverts" :key="item">
+                  <BillboardTpl :item="item" :isLoading="billboardStore.advertsLoading" :showButtons="authStore.isLoggedIn" />
+                </div>
+              </div>
+              <div v-else>
+                <h4>Нет объявление в этой игре</h4>
+              </div>
+            </div>
+            <div v-else>
+              <q-spinner
+                color="primary"
+                size="5em"
+              />
             </div>
           </div>
 
-          <q-separator />
-
-          <q-form class="q-gutter-md q-mt-lg">
-            <div>
-              <div class="input-label">
-                Language
-              </div>
-
-              <q-select filled dense :map-options="true" :emit-value="true" v-model="billboard.language_id" :options="billboardStore.langs" required />
-            </div>
-
-            <div>
-              <div class="input-label">
-                Name game
-              </div>
-
-              <q-select filled dense :map-options="true" :emit-value="true" v-model="billboard.game_id" :options="appStore.lists.games" @filter="(val, update) => filterUpdate(val, update, 'games')" use-input required />
-            </div>
-
-            <div>
-              <div class="input-label">
-                Options
-              </div>
-
-              <q-toggle
-                v-model="billboard.nft"
-                label="NFT"
-              />
-
-              <q-toggle
-                v-model="billboard.f2p"
-                label="F2P"
-              />
-
-              <q-toggle
-                v-model="billboard.p2e"
-                label="P2E"
-              />
-            </div>
-
-            <div>
-              <div class="input-label">
-                Content
-              </div>
-              <q-input
-                filled
-                class="default-textarea"
-                v-model="billboard.name"
-                type="textarea"
-                placeholder="Text"
-              />
-            </div>
-
-            <div class="q-mt-lg">
-              <div class="q-mb-md">
-                <div class="row items-end">
-                  <div class="col-auto ">
-                    <div class="f2 fw-500 lh08">
-                      {{billboard.spots_all}}
-                    </div>
-                  </div>
-                  <div class="col-auto q-ml-xs">
-                    <div class="text-grey-8 text-caption">
-                      Players
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <q-slider thumb-size="24px" v-model="billboard.spots_all" :min="1" :max="spots_total" />
-            </div>
-          </q-form>
+          <Pagination :links="billboardStore.advertsPagination" :isLoading="billboardStore.advertsLoading" @onPaginate="onPaginate" />
         </div>
       </div>
-    </q-dialog>
+
+      <PublishModal />
+    </div>
   </q-page>
 </template>
 
 <script>
 import _ from 'lodash'
 import ChooseGames from 'components/billboard/ChooseGames'
-import BillboardList from 'components/billboard/BillboardList'
+import PublishModal from 'components/billboard/PublishModal'
+import BillboardTpl from 'components/billboard/BillboardTpl'
+import FilterTags from 'components/billboard/FilterTags'
+import Pagination from 'components/common/Pagination'
 import { useBillboardStore } from 'stores/billboard'
+import { useAuthStore } from 'stores/app/auth'
 
 import { defineComponent } from 'vue'
 import { useAppStore } from 'stores/app'
@@ -135,24 +89,28 @@ export default defineComponent({
   name: 'IndexPage',
   components: {
     ChooseGames,
-    BillboardList
+    BillboardTpl,
+    Pagination,
+    FilterTags,
+    PublishModal
   },
   props: [
     'game'
   ],
   setup () {
     const appStore = useAppStore()
+    const authStore = useAuthStore()
     const billboardStore = useBillboardStore()
 
     return {
       appStore,
+      authStore,
       billboardStore
     }
   },
   data () {
     return {
       search: null,
-      rightModal: false,
       billboard_default: null,
       spots_total: 10,
       billboard: {
@@ -167,6 +125,10 @@ export default defineComponent({
     }
   },
   methods: {
+    onPaginate (url) {
+      this.billboardStore.loadAdverts(url)
+    },
+
     async filterUpdate (val, update, key) {
       update(async () => {
         this.appStore.loadList(key, val)
@@ -182,39 +144,16 @@ export default defineComponent({
       })
     },
 
-    async add () {
-      await this.appStore.add()
-    },
-
     async onChooseGameSelected (item) {
-      /*
-      await this.$router.push({
-        name: 'billboard-by-game',
-        params: {
-          game: item.slug
-        },
-        replace: true
-      })
-      */
-
       await this.billboardStore.setCurrentGame(item)
       await this.billboardStore.loadAdverts()
     },
 
-    async onClickNewBillboard () {
-      this.rightModal = true
+    onClickNewBillboard () {
+      this.billboardStore.openModal()
     }
   },
   watch: {
-    /*
-    async $route (to, from) {
-      if (to.name === 'billboard-by-game') {
-        const slug = to.params.game
-        await this.billboardStore.loadAdverts(slug)
-      }
-    },
-    */
-
     async search (val) {
       this.billboardStore.search(val)
     },
@@ -223,17 +162,13 @@ export default defineComponent({
       if (val) {
         this.billboard.game_id = val.id
       }
-    },
-
-    async 'billboardStore.published' (newVal, oldVal) {
-      if (newVal && !oldVal) {
-        this.rightModal = false
-      }
     }
   },
   async mounted () {
+    await this.billboardStore.setCurrentUser(null)
     window.billboard_default = JSON.parse(JSON.stringify(this.billboard))
     await this.billboardStore.loadChooseGames()
+    await this.billboardStore.loadAdverts()
   }
 })
 </script>

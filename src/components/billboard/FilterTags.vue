@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="row items-center">
-      <div class="col-auto">
+      <div class="col-auto" v-if="filtersCheck.game">
         <q-btn color="grey-4" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" v-if="billboardStore.selectedGame">
           {{billboardStore.selectedGame.name}}
         </q-btn>
       </div>
 
-      <div class="col-auto">
+      <div class="col-auto" v-if="filtersCheck.lang">
         <q-btn :color="filter.lang ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true">
           Lang<span v-if="filter.lang">: {{findLabel('langs', filter.lang)}}</span>
 
@@ -23,7 +23,7 @@
         </q-btn>
       </div>
 
-      <div class="col-auto">
+      <div class="col-auto" v-if="filtersCheck.game_type">
         <q-btn :color="filter.game_type ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true">
           Game type<span v-if="filter.game_type">: {{findLabel('game_types', filter.game_type)}}</span>
 
@@ -39,25 +39,25 @@
         </q-btn>
       </div>
 
-      <div class="col-auto">
+      <div class="col-auto" v-if="filtersCheck.android">
         <q-btn :color="filter.android ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" @click.prevent="updateFilterField('android')">
           Android
         </q-btn>
       </div>
 
-      <div class="col-auto">
+      <div class="col-auto" v-if="filtersCheck.ios">
         <q-btn :color="filter.ios ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" @click.prevent="updateFilterField('ios')">
           IOS
         </q-btn>
       </div>
 
-      <div class="col-auto">
+      <div class="col-auto" v-if="filtersCheck.desktop">
         <q-btn :color="filter.pc ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" @click.prevent="updateFilterField('pc')">
           Desktop
         </q-btn>
       </div>
 
-      <div class="col-auto">
+      <div class="col-auto" v-if="filtersCheck.reset">
         <q-btn color="secondary" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" @click="resetFilter" v-if="Object.keys(filter).length > 0">
           Reset
         </q-btn>
@@ -76,11 +76,7 @@ import { defineComponent } from 'vue'
 import { useBillboardStore } from 'stores/billboard'
 
 export default defineComponent({
-  props: ['items', 'isLoading'],
-  emits: ['click'],
-  components: {
-
-  },
+  props: ['currentUser', 'filters'],
   setup () {
     const billboardStore = useBillboardStore()
 
@@ -116,6 +112,17 @@ export default defineComponent({
       }
     }
   },
+  computed: {
+    filtersCheck () {
+      const filters = this.filters
+      const result = {}
+      _.each(filters, (item) => {
+        result[item] = true
+      })
+
+      return result
+    }
+  },
   data () {
     return {
       filter: {}
@@ -124,7 +131,9 @@ export default defineComponent({
   watch: {
     filter: {
       async handler (val) {
-        await this.billboardStore.updateFilter(val)
+        await this.billboardStore.loadAdverts({
+          filter: val
+        })
       },
       deep: true
     }

@@ -4,7 +4,7 @@
       <div class="row items-center">
         <div class="col">
           <h3 class="text-h3">
-            Go Play
+            Go play
           </h3>
         </div>
         <div class="col-auto" v-if="authStore.isLoggedIn">
@@ -40,12 +40,6 @@
   </div>
 </template>
 
-<style scoped lang="scss">
-  .card-md {
-    margin-bottom: 2.5rem;
-  }
-</style>
-
 <script>
 import BillboardTpl from './BillboardTpl'
 import { useAuthStore } from 'stores/app/auth'
@@ -55,7 +49,7 @@ import FilterTags from './FilterTags'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  props: ['items', 'pagination', 'isLoading'],
+  props: ['items', 'pagination', 'isLoading', ''],
   emits: ['onClickNew'],
   components: {
     BillboardTpl,
