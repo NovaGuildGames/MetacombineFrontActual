@@ -15,9 +15,19 @@
           Игры
         </q-btn>
 
-        <q-btn color="primary" v-if="authStore.isLoaded && !authStore.metapass" @click="authStore.connect">
-          Connect
-        </q-btn>
+        <div>
+          <div v-if="!authStore.isLoaded">
+            <q-spinner
+              color="primary"
+              size="2em"
+            />
+          </div>
+          <div v-else>
+            <q-btn color="primary" v-if="!authStore.metapass" @click="authStore.connect">
+              Connect
+            </q-btn>
+          </div>
+        </div>
 
         <q-btn flat no-wrap v-if="authStore.isLoaded && authStore.isLoggedIn">
             <q-avatar size="2rem">
