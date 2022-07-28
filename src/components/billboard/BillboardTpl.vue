@@ -2,16 +2,26 @@
   <div>
     <q-card class="my-card">
       <q-card-section>
-        <div class="row items-center q-mb-md" v-if="item.name_game">
-          <div>
-            <div class="footer-sb">
-              {{item.name_game}}
+        <div class="row items-center justify-between q-mb-md" v-if="item.name_game">
+          <div class="col-auto">
+            <div class="row items-center">
+              <div>
+                <div class="footer-sb">
+                  {{item.name_game}}
+                </div>
+              </div>
+
+              <div class="q-ml-sm" v-if="item.game_devices">
+                <q-chip v-for="device in item.game_devices" :key="device" outline color="grey" size="sm">
+                  {{device}}
+                </q-chip>
+              </div>
             </div>
           </div>
 
-          <div class="q-ml-sm" v-if="item.game_devices">
-            <q-chip v-for="device in item.game_devices" :key="device" outline color="grey" size="sm">
-              {{device}}
+          <div class="col-auto" v-if="isMine">
+            <q-chip outline color="primary" size="sm">
+              Yours
             </q-chip>
           </div>
         </div>
@@ -133,6 +143,7 @@
 
 <script>
 const moment = require('moment')
+import { useAuthStore } from 'stores/app/auth'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -141,8 +152,19 @@ export default defineComponent({
 
   },
   setup () {
+    const authStore = useAuthStore()
+
     return {
+      authStore,
       moment
+    }
+  },
+  computed: {
+    isMine () {
+      const metapass = this.authStore.metapass
+      if (!metapass) return false
+      if (metapass.address === this.item.author_metapass) return true
+      return false
     }
   }
 })
