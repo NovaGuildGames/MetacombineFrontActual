@@ -136,7 +136,8 @@ export const useAuthStore = defineStore('auth', {
         if (response.status === 200) {
           const data = response.data
           const metapass = data.metapass
-          if (metapass.logo) {
+
+          if (metapass && metapass.logo) {
             metapass.logo = filters.imageFullUrl(metapass.logo)
           }
 
@@ -186,7 +187,11 @@ export const useAuthStore = defineStore('auth', {
       if (response.data) {
         localStorage.removeItem('auth_token')
         this._address = null
-        if (provider) provider.disconnect()
+        if (provider) {
+          try {
+            provider.disconnect()
+          } catch {}
+        }
         await this.tryAuth()
       }
     },
