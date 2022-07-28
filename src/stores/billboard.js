@@ -28,10 +28,11 @@ export const useBillboardStore = defineStore('billboard', {
       label: 'F2P',
       value: 'f2p'
     }],
+    _isCurrentUser: null,
+    _isModalOpened: false,
     _advertsFirstPage: false,
     _filter: {},
     _search: null,
-    _published: false,
     _selectedGame: null,
     _chooseGames: [],
     _chooseGamesNext: null,
@@ -42,6 +43,14 @@ export const useBillboardStore = defineStore('billboard', {
   }),
 
   getters: {
+    isCurrentUser (state) {
+      return state._isCurrentUser
+    },
+
+    isModalOpened (state) {
+      return state._isModalOpened
+    },
+
     advertsFirstPage (state) {
       return state._advertsFirstPage
     },
@@ -56,10 +65,6 @@ export const useBillboardStore = defineStore('billboard', {
 
     filter (state) {
       return state._filter
-    },
-
-    published (state) {
-      return state._published
     },
 
     chooseGames (state) {
@@ -103,6 +108,22 @@ export const useBillboardStore = defineStore('billboard', {
   },
 
   actions: {
+    closeModal () {
+      if (this._isModalOpened) {
+        this._isModalOpened = false
+      }
+    },
+
+    openModal () {
+      if (!this._isModalOpened) {
+        this._isModalOpened = true
+      }
+    },
+
+    async setCurrentUser (state) {
+      this._isCurrentUser = state
+    },
+
     async updateFilter (val) {
       this._filter = val
       await this.loadAdverts()
@@ -161,7 +182,6 @@ export const useBillboardStore = defineStore('billboard', {
     },
 
     async publish (data) {
-      this._published = false
       data.additional_info = data.name
       data.name = data.name.slice(0, 100)
 
@@ -169,8 +189,8 @@ export const useBillboardStore = defineStore('billboard', {
         params: data
       }).then(async (res) => {
         if (this.selectedGame) {
-          this._published = true
           await this.loadAdverts()
+          this._isModalOpened = false
         }
       }).catch(async (err) => {
         console.log('err', err)
@@ -185,77 +205,85 @@ export const useBillboardStore = defineStore('billboard', {
       }])
     },
 
-    async loadAdverts (url) {
+    async loadAdverts (params) {
       this._advertsLoading = true
 
-      const game = this._selectedGame
-      if (game) {
-        this._selectedGame = game
-        const gameId = game.id
+      // Определяем параметры
+      let targetUrl = 'billboard/adverts'
+      let filter = {}
 
-        // Для фильтрации
-        let params = {}
-        if (gameId) {
-          params.game_id = gameId
+      if (_.isString(params)) { // Прямой запрос с URL (для пагинации и др.)
+        targetUrl = params
+      } else if (_.isObject(params)) {
+        if (params.filter) {
+          filter = _.merge(filter, params.filter)
         }
-        params = _.merge(params, this._filter)
+      }
 
-        let targetUrl = 'billboard/adverts'
-        if (url) {
-          targetUrl = url
+      if (this.isCurrentUser === null) {
+        const game = this._selectedGame
+        if (game) {
+          const gameId = game.id
+          if (gameId) {
+            filter.game_id = gameId
+          }
         }
-        await api.post(targetUrl, null, {
-          params
-        }).then((res) => {
-          const rawData = res.data
-          if (rawData.total > 0) {
-            this._adverts_pagination = rawData.links
-            const rawItems = rawData.data
-            const result = _.map(rawItems, (item) => {
-              const type = item.type
-              item.devices = item.devices ? item.devices.split('||') : []
+      } else {
+        filter.metapass = this.isCurrentUser
+      }
 
-              // Логотипы
-              const logos = []
-              if (item.players_logos) {
-                _.merge(logos, item.players_logos.split('||'))
-              }
-              if (item.games_logos) {
-                _.merge(logos, item.games_logos.split('||'))
-              }
-              if (item.guilds_logos) {
-                _.merge(logos, item.guilds_logos.split('||'))
-              }
-              item.logos = _.map(logos, (item) => {
-                return filters.imageFullUrl(item)
-              })
+      await api.post(targetUrl, null, {
+        params: filter
+      }).then((res) => {
+        const rawData = res.data
+        if (rawData.total > 0) {
+          this._adverts_pagination = rawData.links
+          const rawItems = rawData.data
+          const result = _.map(rawItems, (item) => {
+            const type = item.type
+            item.game_devices = item.game_devices ? item.game_devices.split('||') : []
+            item.devices = item.devices ? item.devices.split('||') : []
 
-              if (type === 1) {
-                item.logo = filters.imageFullUrl(item.logo_player_author)
-                item.author = item.author_player
-              } else if (type === 2) {
-                item.logo = filters.imageFullUrl(item.logo_game_author)
-                item.author = item.author_game
-              } else if (type === 3) {
-                item.logo = filters.imageFullUrl(item.logo_guild_author)
-                item.author = item.author_guild
-              }
-
-              return item
-            })
-            this._adverts = result
-            if (rawData.current_page > 1) {
-              this._advertsFirstPage = true
-            } else {
-              this._advertsFirstPage = false
+            // Логотипы
+            const logos = []
+            if (item.players_logos) {
+              _.merge(logos, item.players_logos.split('||'))
             }
+            if (item.games_logos) {
+              _.merge(logos, item.games_logos.split('||'))
+            }
+            if (item.guilds_logos) {
+              _.merge(logos, item.guilds_logos.split('||'))
+            }
+            item.logos = _.map(logos, (item) => {
+              return filters.imageFullUrl(item)
+            })
+
+            if (type === 1) {
+              item.logo = filters.imageFullUrl(item.logo_player_author)
+              item.author = item.author_player
+            } else if (type === 2) {
+              item.logo = filters.imageFullUrl(item.logo_game_author)
+              item.author = item.author_game
+            } else if (type === 3) {
+              item.logo = filters.imageFullUrl(item.logo_guild_author)
+              item.author = item.author_guild
+            }
+
+            return item
+          })
+          this._adverts = result
+          if (rawData.current_page > 1) {
+            this._advertsFirstPage = true
           } else {
             this._advertsFirstPage = false
-            this._adverts = []
-            this._adverts_pagination = []
           }
-        })
-      }
+        } else {
+          this._advertsFirstPage = false
+          this._adverts = []
+          this._adverts_pagination = []
+        }
+      })
 
       this._advertsLoading = false
     }
