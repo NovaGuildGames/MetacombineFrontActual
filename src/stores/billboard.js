@@ -4,7 +4,6 @@ import { filters } from 'boot/filters'
 import _ from 'lodash'
 
 import { useAppStore } from 'src/stores/app'
-const appStore = useAppStore()
 
 export const useBillboardStore = defineStore('billboard', {
   state: () => ({
@@ -39,12 +38,17 @@ export const useBillboardStore = defineStore('billboard', {
     _chooseGamesLoading: true,
     _advertsLoading: false,
     _adverts: [],
-    _adverts_pagination: []
+    _adverts_pagination: [],
+    _error: null
   }),
 
   getters: {
     isCurrentUser (state) {
       return state._isCurrentUser
+    },
+
+    error (state) {
+      return state._error
     },
 
     isModalOpened (state) {
@@ -117,6 +121,25 @@ export const useBillboardStore = defineStore('billboard', {
     openModal () {
       if (!this._isModalOpened) {
         this._isModalOpened = true
+      }
+    },
+
+    async goPlay (id) {
+      const appStore = useAppStore()
+
+      try {
+        const result = await api.post('billboard/play/' + id, null, {})
+        console.log(result)
+      } catch (e) {
+        const data = e.response.data
+        if (data.type) {
+          await appStore.setErrors(data.type, {
+            async: true,
+            store: 'billboard',
+            name: 'goPlay',
+            arguments
+          })
+        }
       }
     },
 
@@ -198,6 +221,8 @@ export const useBillboardStore = defineStore('billboard', {
     },
 
     async setCurrentGame (item) {
+      const appStore = useAppStore()
+
       this._selectedGame = item
       appStore.setList('games', [{
         value: item.id,

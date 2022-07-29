@@ -61,6 +61,9 @@
       <!-- drawer content -->
     </q-drawer>
 
+    <pre>
+      {{app.errorsData}}
+    </pre>
     <br><br><br>
 
     <q-footer class="bg-white text-black">
@@ -87,14 +90,19 @@
       </div>
     </q-footer>
 
+    <ErrorsHandle />
   </q-layout>
 </template>
 
 <script>
 import { useAppStore } from 'stores/app'
 import { useAuthStore } from 'stores/app/auth'
+import ErrorsHandle from 'components/errors/ErrorsHandle'
 
 export default {
+  components: {
+    ErrorsHandle
+  },
   setup () {
     const app = useAppStore()
     const authStore = useAuthStore()
@@ -109,6 +117,14 @@ export default {
   methods: {
     async gotoProfile () {
       await this.$router.push({ name: 'profile' })
+    }
+  },
+  watch: {
+    'appStore.errors': {
+      deep: true,
+      handler (val) {
+
+      }
     }
   }
 }

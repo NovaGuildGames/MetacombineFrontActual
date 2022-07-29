@@ -2,16 +2,26 @@
   <div>
     <q-card class="my-card">
       <q-card-section>
-        <div class="row items-center q-mb-md" v-if="item.name_game">
-          <div>
-            <div class="footer-sb">
-              {{item.name_game}}
+        <div class="row items-center justify-between q-mb-md" v-if="item.name_game">
+          <div class="col-auto">
+            <div class="row items-center">
+              <div>
+                <div class="footer-sb">
+                  {{item.name_game}}
+                </div>
+              </div>
+
+              <div class="q-ml-sm" v-if="item.game_devices">
+                <q-chip v-for="device in item.game_devices" :key="device" outline color="grey" size="sm">
+                  {{device}}
+                </q-chip>
+              </div>
             </div>
           </div>
 
-          <div class="q-ml-sm" v-if="item.game_devices">
-            <q-chip v-for="device in item.game_devices" :key="device" outline color="grey" size="sm">
-              {{device}}
+          <div class="col-auto" v-if="isMine">
+            <q-chip outline color="primary" size="sm">
+              Yours
             </q-chip>
           </div>
         </div>
@@ -93,8 +103,8 @@
         </div>
 
         <div v-if="showButtons" class="q-mt-md">
-          <q-btn color="secondary" size="md" class="text-black" unelevated label="Начать игру" />
-          <q-btn flat color="primary" class="q-ml-md" size="md" label="Скопировать Discord ссылку" />
+          <q-btn color="secondary" size="md" class="text-black" unelevated label="Go play" @click="goPlay" />
+          <q-btn flat color="primary" class="q-ml-md" size="md" label="Copy Discord link" />
         </div>
       </q-card-section>
     </q-card>
@@ -133,6 +143,8 @@
 
 <script>
 const moment = require('moment')
+import { useAuthStore } from 'stores/app/auth'
+import { useBillboardStore } from 'stores/billboard'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -141,8 +153,26 @@ export default defineComponent({
 
   },
   setup () {
+    const authStore = useAuthStore()
+    const billboardStore = useBillboardStore()
+
     return {
+      authStore,
+      billboardStore,
       moment
+    }
+  },
+  methods: {
+    async goPlay () {
+      await this.billboardStore.goPlay(this.item.id)
+    }
+  },
+  computed: {
+    isMine () {
+      const metapass = this.authStore.metapass
+      if (!metapass) return false
+      if (metapass.address === this.item.author_metapass) return true
+      return false
     }
   }
 })

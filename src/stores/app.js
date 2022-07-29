@@ -5,8 +5,13 @@ import { api } from 'src/boot/axios.js'
 import { useAuthStore } from './app/auth'
 const authStore = useAuthStore()
 
+// Список для импорта
+import { useBillboardStore } from './billboard'
+
 export const useAppStore = defineStore('app', {
   state: () => ({
+    _errors: {},
+    _errorsData: {},
     _lists: {},
     _config: {
       infura_key: null
@@ -25,6 +30,14 @@ export const useAppStore = defineStore('app', {
   }),
 
   getters: {
+    errors (state) {
+      return state._errors
+    },
+
+    errorsData (state) {
+      return state._errorsData
+    },
+
     lists (state) {
       return state._lists
     },
@@ -39,6 +52,51 @@ export const useAppStore = defineStore('app', {
   },
 
   actions: {
+    async updateMetapass (data) {
+      try {
+        const result = await api.post('metapass/update', data)
+        console.log(result)
+      } catch (e) {
+
+      }
+    },
+
+    async removeErrors (key) {
+      console.log('Удалить', key)
+      if (key in this._errorsData) {
+        const call = this.errorsData[key].call
+        if (call) {
+          let store = null
+          switch (call.store) {
+            case 'billboard':
+              store = useBillboardStore()
+              break
+          }
+
+          if (store && call.name) {
+            const params = call.arguments || []
+            if (call.async) {
+              await store[call.name].apply(store, params)
+            } else {
+              store[call.name].apply(store, params)
+            }
+          }
+        }
+
+        delete this.errorsData[key]
+      }
+      if (key in this._errors) {
+        delete this._errors[key]
+      }
+    },
+
+    async setErrors (key, call) {
+      this._errorsData[key] = {
+        call
+      }
+      this._errors[key] = true
+    },
+
     async setList (key, val) {
       this._lists[key] = val
     },
