@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { useAppStore } from '../app'
 import { api } from 'src/boot/axios.js'
+import { filters } from 'boot/filters'
 
 // Импорт доп библиотек
 const Web3Modal = window.Web3Modal.default
@@ -134,7 +135,13 @@ export const useAuthStore = defineStore('auth', {
       }).then(async (response) => {
         if (response.status === 200) {
           const data = response.data
-          this._metapass = data.metapass
+          const metapass = data.metapass
+
+          if (metapass && metapass.logo) {
+            metapass.logo = filters.imageFullUrl(metapass.logo)
+          }
+
+          this._metapass = metapass
           if (data.metapass) {
             api.defaults.headers.common.Authorization = 'Bearer ' + token
           }
@@ -180,7 +187,11 @@ export const useAuthStore = defineStore('auth', {
       if (response.data) {
         localStorage.removeItem('auth_token')
         this._address = null
-        if (provider) provider.disconnect()
+        if (provider) {
+          try {
+            provider.disconnect()
+          } catch {}
+        }
         await this.tryAuth()
       }
     },

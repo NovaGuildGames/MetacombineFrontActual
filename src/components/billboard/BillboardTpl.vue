@@ -2,15 +2,15 @@
   <div>
     <q-card class="my-card">
       <q-card-section>
-        <div class="row items-center q-mb-md">
+        <div class="row items-center q-mb-md" v-if="item.name_game">
           <div>
             <div class="footer-sb">
-              {{item.name}}
+              {{item.name_game}}
             </div>
           </div>
 
-          <div class="q-ml-sm">
-            <q-chip v-for="device in item.devices" :key="device" outline color="grey" size="sm">
+          <div class="q-ml-sm" v-if="item.game_devices">
+            <q-chip v-for="device in item.game_devices" :key="device" outline color="grey" size="sm">
               {{device}}
             </q-chip>
           </div>
