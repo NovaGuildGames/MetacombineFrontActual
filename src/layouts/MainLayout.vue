@@ -1,5 +1,7 @@
 <template>
   <q-layout view="hHh lpR fff">
+    <q-ajax-bar />
+
     <q-header class="bg-white text-black">
       <q-toolbar class="q-pa-md">
         <q-toolbar-title class="row items-center cursor-pointer" @click="$router.push({ name: 'index' })">
@@ -61,11 +63,6 @@
       <!-- drawer content -->
     </q-drawer>
 
-    <pre>
-      {{app.errorsData}}
-    </pre>
-    <br><br><br>
-
     <q-footer class="bg-white text-black">
       <div class="container q-mb-lg q-pb-sm">
         <div class="row">
@@ -117,14 +114,6 @@ export default {
   methods: {
     async gotoProfile () {
       await this.$router.push({ name: 'profile' })
-    }
-  },
-  watch: {
-    'appStore.errors': {
-      deep: true,
-      handler (val) {
-
-      }
     }
   }
 }
