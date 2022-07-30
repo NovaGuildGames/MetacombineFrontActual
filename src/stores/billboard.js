@@ -135,6 +135,9 @@ export const useBillboardStore = defineStore('billboard', {
         const result = await api.post('billboard/play/' + id, null, {})
         if (result.data.url) {
           window.open(result.data.url, '_blank').focus()
+          await this.loadAdverts({
+            disableLoader: true
+          })
         }
       } catch (e) {
         const data = e.response.data
@@ -237,7 +240,14 @@ export const useBillboardStore = defineStore('billboard', {
     },
 
     async loadAdverts (params) {
-      this._advertsLoading = true
+      let disableLoader = false
+      if (_.isObject(params) && ('disableLoader' in params)) {
+        disableLoader = true
+      }
+
+      if (!disableLoader) {
+        this._advertsLoading = true
+      }
 
       // Определяем параметры
       let targetUrl = 'billboard/adverts'
@@ -316,7 +326,9 @@ export const useBillboardStore = defineStore('billboard', {
         }
       })
 
-      this._advertsLoading = false
+      if (!disableLoader) {
+        this._advertsLoading = false
+      }
     }
   }
 })
