@@ -17,6 +17,50 @@ p {
 .q-btn {
   box-sizing: border-box;
   text-transform: none !important;
+  padding-top: 7px;
+
+  &.bg-primary {
+    box-shadow: 0px 6px 12px rgba(17, 136, 255, 0.25);
+    &:before {
+      box-shadow: none !important;
+    }
+  }
+}
+
+.q-card.published-modal {
+  width: 22.5rem;
+  border: 0px !important;
+  box-shadow: 0px 4px 12px rgb(0 0 0 / 3%) !important;
+  border: 1px solid rgba(0, 0, 0, 0.04) !important;
+
+  .publish-modal-header {
+    padding-top: 67%;
+    background: no-repeat center url('../assets/background-dialog.png') transparent !important;
+    background-size: cover !important;
+    position: relative;
+
+    &:after {
+      display: block;
+      content: '';
+      position: absolute;
+      width: 9rem;
+      height: 9rem;
+      background: no-repeat center url('../assets/moneta.png') transparent !important;
+      background-size: cover !important;
+      bottom: -2.5rem;
+      right: 2rem;
+    }
+  }
+}
+
+.fix-scroll {
+  margin-left: -10px;
+  margin-right: -15px;
+
+  .q-scrollarea__content {
+    padding-left: 10px !important;
+    padding-right: 15px !important;
+  }
 }
 
 .q-card {
@@ -174,14 +218,14 @@ p {
 
 .modal-back {
   width: 700px;
-  pointer-events: none !important;
+  //pointer-events: none !important;
   position: relative;
 
   .modal-back-inner {
     padding-left: 2.5rem;
     padding-right: 2.5rem;
     background: white;
-    pointer-events: all !important;
+    //pointer-events: all !important;
     position: absolute;
     top: 72px;
     bottom: 0px;

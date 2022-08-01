@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh lpR fff">
-    <q-ajax-bar />
+    <q-ajax-bar color="primary" />
 
     <q-header class="bg-white text-black">
       <q-toolbar class="q-pa-md">
@@ -25,7 +25,7 @@
             />
           </div>
           <div v-else>
-            <q-btn color="primary" v-if="!authStore.metapass" @click="authStore.connect">
+            <q-btn color="primary" v-if="!authStore.metapass && ($route.name != 'register')" @click="authStore.connect">
               Connect
             </q-btn>
           </div>
@@ -33,7 +33,9 @@
 
         <q-btn flat no-wrap v-if="authStore.isLoaded && authStore.isLoggedIn">
             <q-avatar size="2rem">
-              <img src="https://cdn.quasar.dev/img/avatar3.jpg">
+              <q-img
+                :src="authStore.metapass.logo"
+              />
             </q-avatar>
             <q-icon name="eva-chevron-down-outline" size="1.3rem" />
 

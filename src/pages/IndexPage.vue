@@ -39,6 +39,11 @@
                   <q-icon name="fa-solid fa-plus" class="q-mr-xs" /> New
                 </q-btn>
               </div>
+              <div class="col-auto" v-else>
+                <q-btn color="primary" @click="$router.push({name: 'register'})">
+                  <q-icon name="fa-solid fa-plus" class="q-mr-xs" /> New
+                </q-btn>
+              </div>
             </div>
 
             <FilterTags :filters="['game', 'lang', 'game_type', 'android', 'ios', 'desktop', 'reset']" />

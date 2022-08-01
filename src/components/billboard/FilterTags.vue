@@ -2,7 +2,7 @@
   <div>
     <div class="row items-center">
       <div class="col-auto" v-if="filtersCheck.game">
-        <q-btn color="grey-4" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" v-if="billboardStore.selectedGame">
+        <q-btn color="grey-4" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" @click.prevent="billboardStore.unsetGame" v-if="billboardStore.selectedGame">
           {{billboardStore.selectedGame.name}}
         </q-btn>
       </div>
@@ -58,7 +58,7 @@
       </div>
 
       <div class="col-auto" v-if="filtersCheck.reset">
-        <q-btn color="secondary" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" @click="resetFilter" v-if="Object.keys(filter).length > 0">
+        <q-btn color="secondary" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" @click="resetFilter" v-if="(Object.keys(filter).length > 0) || billboardStore.selectedGame">
           Reset
         </q-btn>
       </div>
@@ -87,6 +87,7 @@ export default defineComponent({
   methods: {
     async resetFilter () {
       this.filter = {}
+      this.billboardStore.unsetGame()
     },
 
     async updateFilterField (field) {

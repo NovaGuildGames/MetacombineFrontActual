@@ -102,7 +102,7 @@
           {{item.text}}
         </div>
 
-        <div v-if="showButtons" class="q-mt-md">
+        <div class="q-mt-md">
           <q-btn color="secondary" size="md" class="text-black" unelevated label="Go play" @click="goPlay" />
           <q-btn flat color="primary" class="q-ml-md" size="md" label="Copy Discord link" />
         </div>
@@ -164,7 +164,11 @@ export default defineComponent({
   },
   methods: {
     async goPlay () {
-      await this.billboardStore.goPlay(this.item.id)
+      if (this.authStore.isLoggedIn) {
+        await this.billboardStore.goPlay(this.item.id)
+      } else {
+        await this.$router.push({ name: 'register' })
+      }
     }
   },
   computed: {

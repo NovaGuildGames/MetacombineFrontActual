@@ -29,6 +29,7 @@ export const useBillboardStore = defineStore('billboard', {
     }],
     _isCurrentUser: null,
     _isModalOpened: false,
+    _isPublished: false,
     _advertsFirstPage: false,
     _filter: {},
     _search: null,
@@ -57,6 +58,10 @@ export const useBillboardStore = defineStore('billboard', {
 
     isModalOpened (state) {
       return state._isModalOpened
+    },
+
+    isPublished (state) {
+      return state._isPublished
     },
 
     advertsFirstPage (state) {
@@ -116,6 +121,11 @@ export const useBillboardStore = defineStore('billboard', {
   },
 
   actions: {
+    async unsetGame () {
+      this._selectedGame = null
+      this.loadAdverts()
+    },
+
     closeModal () {
       if (this._isModalOpened) {
         this._isModalOpened = false
@@ -203,10 +213,13 @@ export const useBillboardStore = defineStore('billboard', {
           this._chooseGames = _.union(this._chooseGames, result)
         } else {
           this._chooseGames = result
+
+          /*
           if (!this._selectedGame) {
             await this.setCurrentGame(_.head(result))
             await this.loadAdverts()
           }
+          */
 
           this._chooseGamesLoading = false
         }
@@ -223,6 +236,7 @@ export const useBillboardStore = defineStore('billboard', {
         if (this.selectedGame) {
           await this.loadAdverts()
           this._isModalOpened = false
+          this._isPublished = true
         }
       }).catch(async (err) => {
         console.log('err', err)
