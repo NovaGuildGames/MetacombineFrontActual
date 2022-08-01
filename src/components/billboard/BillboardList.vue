@@ -1,5 +1,6 @@
 <template>
   <div>
+    <a :href="billboardStore.discordLink" ref="discordLink"></a>
     <template v-if="!billboardStore.advertsFirstPage">
       <div class="row items-center">
         <div class="col">

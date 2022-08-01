@@ -30,6 +30,29 @@ p {
   height: 15rem;
 }
 
+.q-editor .q-btn {
+  padding: 0px !important;
+  font-size: 1rem !important;
+  line-height: 1 !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  background: transparent !important;
+
+  .q-ripple {
+    display: none !important;
+  }
+}
+
+.q-field {
+  &:not(.q-field--error) {
+    padding-bottom: 0px !important;
+
+    .q-field__bottom {
+      display: none !important;
+    }
+  }
+}
+
 .card-md {
   margin-bottom: 2.5rem;
 }

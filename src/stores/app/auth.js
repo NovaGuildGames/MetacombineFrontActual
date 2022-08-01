@@ -105,7 +105,28 @@ export const useAuthStore = defineStore('auth', {
       web3Modal.clearCachedProvider()
     },
 
+    async hasError (key, label) {
+      const items = this._registerErrors
+      if (items && items.errors) {
+        if (key in items.errors) {
+          return true
+        }
+      }
+      return false
+    },
+
+    async validate (key, label) {
+      const items = this._registerErrors
+      if (items && items.errors) {
+        if (key in items.errors) {
+          return label + ': ' + items.errors[key].join(', ')
+        }
+      }
+      return true
+    },
+
     async registerMetapass (formData) {
+      this._registerErrors = {}
       await api.post('register', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'

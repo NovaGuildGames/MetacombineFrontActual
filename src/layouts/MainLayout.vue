@@ -1,5 +1,7 @@
 <template>
   <q-layout view="hHh lpR fff">
+    <q-ajax-bar />
+
     <q-header class="bg-white text-black">
       <q-toolbar class="q-pa-md">
         <q-toolbar-title class="row items-center cursor-pointer" @click="$router.push({ name: 'index' })">
@@ -60,11 +62,6 @@
     <q-drawer v-model="rightDrawerOpen" side="right" overlay behavior="desktop" :width="600" bordered v-show="false">
       <!-- drawer content -->
     </q-drawer>
-
-    <pre>
-      {{app.errorsData}}
-    </pre>
-    <br><br><br>
 
     <q-footer class="bg-white text-black">
       <div class="container q-mb-lg q-pb-sm">

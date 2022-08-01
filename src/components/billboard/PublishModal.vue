@@ -81,7 +81,7 @@
                   </div>
                 </div>
               </div>
-              <q-slider thumb-size="24px" v-model="billboard.spots_all" :min="1" :max="spots_total" />
+              <q-slider thumb-size="24px" v-model="billboard.spots_all" :min="2" :max="spots_total" />
             </div>
           </q-form>
         </div>
@@ -136,7 +136,7 @@ export default defineComponent({
         p2e: false,
         f2p: false,
         name: null,
-        spots_all: 1
+        spots_all: 2
       }
     }
   },

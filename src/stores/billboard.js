@@ -43,6 +43,10 @@ export const useBillboardStore = defineStore('billboard', {
   }),
 
   getters: {
+    discordLink (state) {
+      return state._discordLink
+    },
+
     isCurrentUser (state) {
       return state._isCurrentUser
     },
@@ -129,7 +133,12 @@ export const useBillboardStore = defineStore('billboard', {
 
       try {
         const result = await api.post('billboard/play/' + id, null, {})
-        console.log(result)
+        if (result.data.url) {
+          window.open(result.data.url, '_blank').focus()
+          await this.loadAdverts({
+            disableLoader: true
+          })
+        }
       } catch (e) {
         const data = e.response.data
         if (data.type) {
@@ -231,7 +240,14 @@ export const useBillboardStore = defineStore('billboard', {
     },
 
     async loadAdverts (params) {
-      this._advertsLoading = true
+      let disableLoader = false
+      if (_.isObject(params) && ('disableLoader' in params)) {
+        disableLoader = true
+      }
+
+      if (!disableLoader) {
+        this._advertsLoading = true
+      }
 
       // Определяем параметры
       let targetUrl = 'billboard/adverts'
@@ -310,7 +326,9 @@ export const useBillboardStore = defineStore('billboard', {
         }
       })
 
-      this._advertsLoading = false
+      if (!disableLoader) {
+        this._advertsLoading = false
+      }
     }
   }
 })

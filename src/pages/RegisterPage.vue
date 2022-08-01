@@ -1,30 +1,27 @@
 <template>
   <q-page class="q-pt-lg overflow-hidden">
     <div class="container">
-      <div class="q-pt-md q-pb-sm row justify-between">
-        <div class="text-h3">
-          Register
+      <div class="q-pt-md q-pb-lg row justify-between">
+        <div class="col">
+          <div class="text-h3 text-center">
+            Welcome to MetaCombine
+          </div>
         </div>
       </div>
 
       <div v-if="!authStore.isLoading">
-        <div v-if="!authStore.address && !authStore.metapass">
+        <!--div v-if="!authStore.address && !authStore.metapass">
           <p>
             Вы еще не подключились к метапасс, для регистрации подключитесь (кнопка наверху)
           </p>
-        </div>
-        <div v-if="authStore.metapass">
+        </div-->
+        <!--div v-if="authStore.metapass">
           <p>
             Вы уже зарегистрированы в системе
           </p>
-        </div>
+        </div-->
         <div v-if="authStore.address && !authStore.metapass">
-          <p>
-            Вы еще не зарегистрированы, пожалуйста зарегистрируйтесь в системе, для того чтобы пользоваться всеми возможностями платформы
-          </p>
-
-          <div v-if="!type">
-            <div class="text-subtitle2 text-center q-mt-md">Для продолжения регистрации выберите тип учетной записи</div>
+          <!--div v-if="!type">
             <div class="row justify-center q-gutter-xl col-2 q-mt-sm">
               <div class="column">
                 <q-btn icon="person" stack size="40px" flat @click="type = 1" />
@@ -39,40 +36,47 @@
                 <div class="text-subtitle2 text-center">Гильдия</div>
               </div>
             </div>
-          </div>
+          </div-->
 
           <!-- Игрок -->
           <div v-if="type == 1" class="row full-width justify-center">
-            <div class="col-12 col-lg-12 row items-center justify-center q-my-sm">
-              <q-btn class="q-mr-sm" icon="person" stack size="lg" flat />
-              <div class="self-center">Регистрация игрока</div>
-            </div>
-            <div class="col-12 col-lg-6">
+            <div class="col-12 col-lg-4">
               <q-form
                 id="registerPlayerForm"
                 enctype="multipart/form-data"
                 class="q-gutter-md"
+                ref="registerPlayerForm"
               >
+                <div>
+                  <q-select class="q-mb-md" v-model="type" :options="types" dense map-options filled/>
+                  <q-input class="q-mb-md" v-model="register.player.nickname" placeholder="Nickname*" :error="true" name="nickname" dense filled :rules="[ async val => await authStore.validate('nickname', 'Nickname') ]" />
+                  <q-input class="q-mb-md" v-model="register.player.discord_nickname" dense placeholder="Discord Nickname*" name="discord_nickname" :rules="[ async val => await authStore.validate('discord_nickname', 'Discord nickname') ]" filled/>
+                </div>
 
-                <q-input v-model="register.player.nickname" label="Nickname*" name="nickname" filled />
-                <q-input v-model="register.player.discord_nickname" label="Discord Nickname*" name="discord_nickname" filled/>
-                <q-file name="logo" v-model="register.player.logo" accept=".jpg, .png" filled label="Avatar">
-                  <template v-slot:prepend>
-                    <q-icon name="attach_file" />
-                  </template>
-                </q-file>
+                <div v-if="showMorePlayer">
+                  <q-file class="q-mb-md" name="logo" v-model="register.player.logo" accept=".jpg, .png" filled dense label="Avatar">
+                    <template v-slot:prepend>
+                      <q-icon name="attach_file" />
+                    </template>
+                  </q-file>
 
-                <p>Description/Bio*</p>
-                <q-editor v-model="register.player.description" min-height="6rem" />
-                <input type="hidden" v-model="register.player.description" name="description" />
+                  <p class="q-mb-md">Description/Bio*</p>
+                  <q-editor class="q-mb-md" v-model="register.player.description" min-height="6rem" />
+                  <input type="hidden" v-model="register.player.description" name="description" />
 
-                <q-select clearable v-model="register.player.location_id" label="Location" name="location_id" :options="appStore.lists.locations" @filter="(val, update) => filterUpdate(val, update, 'locations')" use-input filled/>
-                <q-select clearable v-model="register.player.devices" label="Devices" name="devices[]" :options="appStore.lists.devices" @filter="(val, update) => filterUpdate(val, update, 'devices')" use-input multiple use-chips stack-label map-options filled/>
-                <q-select clearable v-model="register.player.skills" label="Skills" name="skills[]" :options="appStore.lists.skills" @filter="(val, update) => filterUpdate(val, update, 'skills')" multiple use-input use-chips stack-label map-options filled/>
-                <q-select clearable v-model="register.player.games" label="Games" name="games[]" :options="appStore.lists.games" @filter="(val, update) => filterUpdate(val, update, 'games')" multiple use-input use-chips stack-label map-options filled/>
-                <q-select clearable v-model="register.player.statuses" label="Statuses" name="statuses[]" :options="appStore.lists['player-statuses']" @filter="(val, update) => filterUpdate(val, update, 'player-statuses')" multiple use-input use-chips stack-label map-options filled/>
+                  <q-select class="q-mb-md" clearable v-model="register.player.location_id" dense placeholder="Location" name="location_id" :options="appStore.lists.locations" @filter="(val, update) => filterUpdate(val, update, 'locations')" use-input filled/>
+                  <q-select class="q-mb-md" clearable v-model="register.player.devices" dense placeholder="Devices" name="devices[]" :options="appStore.lists.devices" @filter="(val, update) => filterUpdate(val, update, 'devices')" use-input multiple use-chips stack-label map-options filled/>
+                  <q-select class="q-mb-md" clearable v-model="register.player.skills" dense placeholder="Skills" name="skills[]" :options="appStore.lists.skills" @filter="(val, update) => filterUpdate(val, update, 'skills')" multiple use-input use-chips stack-label map-options filled/>
+                  <q-select class="q-mb-md" clearable v-model="register.player.games" dense placeholder="Games" name="games[]" :options="appStore.lists.games" @filter="(val, update) => filterUpdate(val, update, 'games')" multiple use-input use-chips stack-label map-options filled/>
+                  <q-select class="q-mb-md" clearable v-model="register.player.statuses" dense placeholder="Statuses" name="statuses[]" :options="appStore.lists['player-statuses']" @filter="(val, update) => filterUpdate(val, update, 'player-statuses')" multiple use-input use-chips stack-label map-options filled/>
+                </div>
 
-                <q-btn color="primary" label="Register" @click="onRegister('registerPlayerForm')" />
+                <div class="q-mb-md">
+                  <q-btn class="full-width" color="primary" label="Sign Up" @click="onRegister('registerPlayerForm')" />
+                </div>
+                <div class="q-mb-md">
+                  <q-btn class="full-width" color="primary" flat :label="showMorePlayer ? 'Sign Up with short-filling' : 'Sign Up with full-filling'" @click="showMorePlayer = !showMorePlayer" />
+                </div>
               </q-form>
             </div>
           </div>
@@ -128,10 +132,21 @@ export default defineComponent({
   },
   data () {
     return {
-      type: null,
+      types: [
+        {
+          label: 'Player',
+          value: 1
+        },
+        {
+          label: 'Game',
+          value: 2
+        }
+      ],
+      showMorePlayer: false,
+      type: 1,
       register: {
         player: {
-          description: null
+          description: ''
         },
         game: {
           requirements: null,
@@ -151,8 +166,9 @@ export default defineComponent({
     },
 
     async onRegister (formRef) {
-      const form = document.getElementById(formRef)
-      const formData = new FormData(form)
+      // const form = document.getElementById(formRef)
+      const form = this.$refs[formRef]
+      const formData = new FormData(form.$el)
       formData.append('address', this.authStore.address)
       formData.append('type', this.type)
       await this.authStore.registerMetapass(formData)
