@@ -217,9 +217,7 @@ export const useBillboardStore = defineStore('billboard', {
       data.additional_info = data.name
       data.name = data.name.slice(0, 100)
 
-      await api.post('billboard/add/advert', null, {
-        params: data
-      }).then(async (res) => {
+      await api.post('billboard/add/advert', data).then(async (res) => {
         if (this.selectedGame) {
           await this.loadAdverts()
           this._isModalOpened = false
@@ -273,9 +271,7 @@ export const useBillboardStore = defineStore('billboard', {
         filter.metapass = this.isCurrentUser
       }
 
-      await api.post(targetUrl, null, {
-        params: filter
-      }).then((res) => {
+      await api.post(targetUrl, filter).then((res) => {
         const rawData = res.data
         if (rawData.total > 0) {
           this._adverts_pagination = rawData.links
