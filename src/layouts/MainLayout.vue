@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh lpR fff">
-    <q-ajax-bar color="primary" />
+    <q-ajax-bar :hijack-filter="myFilterFn" color="primary" />
 
     <q-header class="bg-white text-black">
       <q-toolbar class="q-pa-md">
@@ -116,6 +116,10 @@ export default {
   methods: {
     async gotoProfile () {
       await this.$router.push({ name: 'profile' })
+    },
+    myFilterFn (url) {
+      const check = /^https:\/\/mc.yandex/ui.test(url)
+      return !check
     }
   },
   watch: {
