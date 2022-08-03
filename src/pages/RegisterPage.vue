@@ -48,8 +48,8 @@
                 ref="registerPlayerForm"
               >
                 <div>
-                  <q-select class="q-mb-md" v-model="type" :options="types" dense map-options filled/>
-                  <q-input class="q-mb-md" v-model="register.player.nickname" placeholder="Nickname*" :error="true" name="nickname" dense filled :rules="[ async val => await authStore.validate('nickname', 'Nickname') ]" />
+                  <q-select class="q-mb-md" v-model="type" :options="types" dense map-options emit-value filled/>
+                  <q-input class="q-mb-md" v-model="register.player.nickname" placeholder="Nickname*" name="nickname" dense filled :rules="[ async val => await authStore.validate('nickname', 'Nickname') ]" />
                   <q-input class="q-mb-md" v-model="register.player.discord_nickname" dense placeholder="Discord Nickname*" name="discord_nickname" :rules="[ async val => await authStore.validate('discord_nickname', 'Discord nickname') ]" filled/>
                 </div>
 
@@ -80,6 +80,70 @@
               </q-form>
             </div>
           </div>
+
+          <!-- Игра -->
+        <div v-if="type == 2" class="row full-width justify-center">
+          <div class="col-12 col-lg-4">
+              <q-form
+              id="registerGameForm"
+              enctype="multipart/form-data"
+              class="q-gutter-md"
+              ref="registerPGameForm"
+              >
+              <div>
+                  <q-select class="q-mb-md" v-model="type" :options="types" dense map-options emit-value filled/>
+                  <q-input class="q-mb-md" v-model="register.game.name" placeholder="Name*" name="name" dense filled :rules="[ async val => await authStore.validate('name', 'Name') ]" />
+                  <q-input class="q-mb-md" v-model="register.game.discord_nickname" dense placeholder="Discord Nickname*" name="discord_nickname" :rules="[ async val => await authStore.validate('discord_nickname', 'Discord nickname') ]" filled/>
+              </div>
+
+              <div v-if="showMoreGame">
+                  <q-file class="q-mb-md" name="logo" v-model="register.game.logo" accept=".jpg, .png" dense filled label="Logo">
+                    <template v-slot:prepend>
+                      <q-icon name="attach_file" />
+                    </template>
+                  </q-file>
+
+                  <q-select class="q-mb-md" clearable v-model="register.game.main_blockchain" dense placeholder="Main blockchain" name="main_blockchain" :options="appStore.lists.blockchains" @filter="(val, update) => filterUpdate(val, update, 'blockchains')" use-input map-options filled/>
+
+                  <p class="q-mb-md">Requirements</p>
+                  <q-editor class="q-mb-md" v-model="register.game.requirements" min-height="12rem" />
+                  <input type="hidden" v-model="register.game.requirements" name="description" />
+
+                  <q-select class="q-mb-md" clearable v-model="register.game.stage" dense placeholder="Stage" name="stage" :options="appStore.lists['game-stages']" @filter="(val, update) => filterUpdate(val, update, 'game-stages')" map-options filled/>
+                  <div>
+                    <q-toggle class="q-mb-md" v-model="register.game.nft" dense label="NFT Support" name="nft" />
+                  </div>
+                  <div>
+                    <q-toggle class="q-mb-md" v-model="register.game.p2e" dense label="P2E Support" name="p2e" />
+                  </div>
+                  <div>
+                    <q-toggle class="q-mb-md" v-model="register.game.f2p" dense label="F2P Support" name="f2p" />
+                  </div>
+
+                  <q-select class="q-mb-md" clearable v-model="register.game.tickers" dense placeholder="Tickers" name="tickers[]" @filter="(val, update) => filterUpdate(val, update, 'tickers')" use-input input-debounce="0" new-value-mode="add-unique" multiple use-chips stack-label map-options filled/>
+
+                  <q-file class="q-mb-md" name="screenshots[]" v-model="register.game.screenshots" multiple accept=".jpg, .png" filled dense label="Screenshots">
+                    <template v-slot:prepend>
+                      <q-icon name="attach_file" />
+                    </template>
+                  </q-file>
+
+                  <q-select class="q-mb-md" clearable v-model="register.game.statuses" dense placeholder="Search for" name="statuses[]" :options="appStore.lists['game-statuses']" @filter="(val, update) => filterUpdate(val, update, 'game-statuses')" use-input multiple use-chips stack-label map-options filled/>
+                  <q-select class="q-mb-md" clearable v-model="register.game.genres" dense placeholder="Genres" name="genres[]" :options="appStore.lists.genres" @filter="(val, update) => filterUpdate(val, update, 'genres')" use-input multiple use-chips stack-label map-options filled/>
+                  <q-select class="q-mb-md" clearable v-model="register.game.languages" dense placeholder="Languages" name="languages[]" :options="appStore.lists.languages" @filter="(val, update) => filterUpdate(val, update, 'languages')" use-input multiple use-chips stack-label map-options filled/>
+                  <q-select class="q-mb-md" clearable v-model="register.player.devices" dense placeholder="Devices" name="devices[]" :options="appStore.lists.devices" @filter="(val, update) => filterUpdate(val, update, 'devices')" use-input multiple use-chips stack-label map-options filled/>
+                  <q-select class="q-mb-md" clearable v-model="register.player.exchanges" dense placeholder="Exchanges" name="exchanges[]" :options="appStore.lists.exchanges" @filter="(val, update) => filterUpdate(val, update, 'exchanges')" use-input multiple use-chips stack-label map-options filled/>
+              </div>
+
+              <div class="q-mb-md">
+                  <q-btn class="full-width" color="primary" label="Sign Up" @click="onRegister('registerGameForm')" />
+              </div>
+              <div class="q-mb-md">
+                  <q-btn class="full-width" color="primary" flat :label="showMoreGame ? 'Sign Up with short-filling' : 'Sign Up with full-filling'" @click="showMoreGame = !showMoreGame" />
+              </div>
+              </q-form>
+          </div>
+        </div>
 
           <div v-if="authStore.registerErrors">
             <h3>Ошибки регистрации</h3>
@@ -143,6 +207,7 @@ export default defineComponent({
         }
       ],
       showMorePlayer: false,
+      showMoreGame: false,
       type: 1,
       register: {
         player: {
