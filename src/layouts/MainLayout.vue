@@ -115,6 +115,14 @@ export default {
     async gotoProfile () {
       await this.$router.push({ name: 'profile' })
     }
+  },
+  watch: {
+    'appStore.errors': {
+      deep: true,
+      handler (val) {
+
+      }
+    }
   }
 }
 </script>
