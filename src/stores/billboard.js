@@ -231,11 +231,9 @@ export const useBillboardStore = defineStore('billboard', {
       data.name = data.name.slice(0, 100)
 
       await api.post('billboard/add/advert', data).then(async (res) => {
-        if (this.selectedGame) {
-          await this.loadAdverts()
-          this._isModalOpened = false
-          this._isPublished = true
-        }
+        await this.loadAdverts()
+        this._isModalOpened = false
+        this._isPublished = true
       }).catch(async (err) => {
         console.log('err', err)
       })
