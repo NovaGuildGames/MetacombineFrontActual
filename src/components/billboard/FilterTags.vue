@@ -9,7 +9,7 @@
 
       <div class="col-auto" v-if="filtersCheck.lang">
         <q-btn :color="filter.lang ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true">
-          Lang<span v-if="filter.lang">: {{findLabel('langs', filter.lang)}}</span>
+          Language<span v-if="filter.lang">: {{findLabel('langs', filter.lang)}}</span>
 
           <q-menu fit>
             <q-list dense>
@@ -25,7 +25,7 @@
 
       <div class="col-auto" v-if="filtersCheck.game_type">
         <q-btn :color="filter.game_type ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true">
-          Game type<span v-if="filter.game_type">: {{findLabel('game_types', filter.game_type)}}</span>
+          Type<span v-if="filter.game_type">: {{findLabel('game_types', filter.game_type)}}</span>
 
           <q-menu fit>
             <q-list dense>
