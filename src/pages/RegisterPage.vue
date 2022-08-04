@@ -20,11 +20,11 @@
             Вы уже зарегистрированы в системе
           </p>
         </div-->
-        <div class="text-center">
+        <div class="text-center" v-if="!authStore.metapass && !authStore.isConnected">
           <p class="q-mb-md">
             If you want to continue please connect. You need to have metamask installed
           </p>
-          <q-btn color="primary" v-if="!authStore.metapass" @click="authStore.connect">
+          <q-btn color="primary" @click="authStore.connect">
             Connect
           </q-btn>
         </div>
