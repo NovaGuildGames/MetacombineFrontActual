@@ -138,7 +138,8 @@ export const useBillboardStore = defineStore('billboard', {
       }
     },
 
-    async goPlay (id) {
+    async goPlay (item) {
+      const id = item.id
       const appStore = useAppStore()
 
       try {
@@ -148,6 +149,14 @@ export const useBillboardStore = defineStore('billboard', {
           await this.loadAdverts({
             disableLoader: true
           })
+
+          const item = await _.find(this.adverts, (current) => {
+            return current.id === id
+          })
+
+          if (item) {
+            item.discord_link = result.data.url
+          }
         }
       } catch (e) {
         const data = e.response.data
@@ -200,6 +209,7 @@ export const useBillboardStore = defineStore('billboard', {
         result = _.map(result, (item) => {
           return {
             id: item.id,
+            website: item.website,
             name: item.name,
             slug: item.slug,
             logo: filters.imageFullUrl(item.logo),
@@ -234,6 +244,16 @@ export const useBillboardStore = defineStore('billboard', {
         await this.loadAdverts()
         this._isModalOpened = false
         this._isPublished = true
+      }).catch(async (err) => {
+        console.log('err', err)
+      })
+    },
+
+    async deleteItem (id) {
+      await api.post('billboard/delete', {
+        advert_id: id
+      }).then(async (res) => {
+        await this.loadAdverts()
       }).catch(async (err) => {
         console.log('err', err)
       })
@@ -295,13 +315,11 @@ export const useBillboardStore = defineStore('billboard', {
 
             // Логотипы
             const logos = []
-            if (item.players_logos) {
+            if (type === 1) {
               _.merge(logos, item.players_logos.split('||'))
-            }
-            if (item.games_logos) {
+            } else if (type === 2) {
               _.merge(logos, item.games_logos.split('||'))
-            }
-            if (item.guilds_logos) {
+            } else if (type === 3) {
               _.merge(logos, item.guilds_logos.split('||'))
             }
             item.logos = _.map(logos, (item) => {
@@ -319,6 +337,7 @@ export const useBillboardStore = defineStore('billboard', {
               item.author = item.author_guild
             }
 
+            item.discord_link = null
             return item
           })
           this._adverts = result

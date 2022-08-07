@@ -18,6 +18,11 @@ const routes = [
         component: () => import('pages/ProfilePage.vue'),
         name: 'profile'
       },
+      {
+        path: '/update-profile',
+        component: () => import('pages/UpdateProfilePage.vue'),
+        name: 'update-profile'
+      },
       /*
       {
         path: '/billboard/:game',

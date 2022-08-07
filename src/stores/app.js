@@ -109,6 +109,12 @@ export const useAppStore = defineStore('app', {
       })
     },
 
+    async loadLists () {
+      await api.post('lists/all').then(async (res) => {
+        this._lists = res.data || {}
+      })
+    },
+
     async add () {
       this._slides.push({
         name: 'Slide 5'

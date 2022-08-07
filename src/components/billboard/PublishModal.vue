@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-dialog v-model="billboardStore._isPublished" :seamless="true">
+    <q-dialog v-model="billboardStore._isPublished">
       <q-card class="published-modal">
         <q-card-section class="publish-modal-header"></q-card-section>
 
@@ -8,7 +8,7 @@
           <div class="text-h6 fw-600">
             Good job!
           </div>
-          <div class="q-mt-md">
+          <div class="q-mt-md lh13">
             Your billboard has been successfully published
           </div>
         </q-card-section>

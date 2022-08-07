@@ -56,12 +56,12 @@
                 ref="registerPlayerForm"
               >
                 <div>
-                  <!--q-select class="q-mb-md" v-model="type" :options="types" dense map-options emit-value filled/-->
+                  <q-select class="q-mb-md" v-model="type" :options="types" dense map-options emit-value filled/>
                   <q-input class="q-mb-md" v-model="register.player.nickname" placeholder="Nickname*" name="nickname" dense filled :rules="[ async val => await authStore.validate('nickname', 'Nickname') ]" />
-                  <q-input class="q-mb-md" v-model="register.player.discord_nickname" dense placeholder="Discord Nickname#0000 *" name="discord_nickname" :rules="[ async val => await authStore.validate('discord_nickname', 'Discord nickname') ]" filled/>
+                  <q-input class="q-mb-md" v-model="register.player.discord_nickname" dense placeholder="Discord Nickname*" name="discord_nickname" :rules="[ async val => await authStore.validate('discord_nickname', 'Discord nickname') ]" filled/>
                 </div>
 
-                <!--div v-if="showMorePlayer">
+                <div v-if="showMorePlayer">
                   <q-file class="q-mb-md" name="logo" v-model="register.player.logo" accept=".jpg, .png" filled dense label="Avatar">
                     <template v-slot:prepend>
                       <q-icon name="attach_file" />
@@ -77,20 +77,20 @@
                   <q-select class="q-mb-md" clearable v-model="register.player.skills" dense placeholder="Skills" name="skills[]" :options="appStore.lists.skills" @filter="(val, update) => filterUpdate(val, update, 'skills')" multiple use-input use-chips stack-label map-options filled/>
                   <q-select class="q-mb-md" clearable v-model="register.player.games" dense placeholder="Games" name="games[]" :options="appStore.lists.games" @filter="(val, update) => filterUpdate(val, update, 'games')" multiple use-input use-chips stack-label map-options filled/>
                   <q-select class="q-mb-md" clearable v-model="register.player.statuses" dense placeholder="Statuses" name="statuses[]" :options="appStore.lists['player-statuses']" @filter="(val, update) => filterUpdate(val, update, 'player-statuses')" multiple use-input use-chips stack-label map-options filled/>
-                </div-->
+                </div>
 
                 <div class="q-mb-md">
                   <q-btn class="full-width" color="primary" label="Sign Up" @click="onRegister('registerPlayerForm')" />
                 </div>
-                <!--div class="q-mb-md">
+                <div class="q-mb-md">
                   <q-btn class="full-width" color="primary" flat :label="showMorePlayer ? 'Sign Up with short-filling' : 'Sign Up with full-filling'" @click="showMorePlayer = !showMorePlayer" />
-                </div-->
+                </div>
               </q-form>
             </div>
           </div>
 
           <!-- Игра -->
-        <!--div v-if="type == 2" class="row full-width justify-center">
+        <div v-if="type == 2" class="row full-width justify-center">
           <div class="col-12 col-lg-4">
               <q-form
               id="registerGameForm"
@@ -151,16 +151,16 @@
               </div>
               </q-form>
           </div>
-        </div-->
+        </div>
 
-          <!--div v-if="authStore.registerErrors">
+          <div v-if="authStore.registerErrors">
             <h3>Ошибки регистрации</h3>
             <div>
               {{authStore.registerErrors}}
             </div>
             <hr>
             <br><br><br>
-          </div-->
+          </div>
         </div>
 
         <!--
