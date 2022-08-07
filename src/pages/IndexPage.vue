@@ -9,7 +9,7 @@
       </div>
 
       <template v-if="!billboardStore.advertsFirstPage">
-        <div class="q-mb-md">
+        <div>
           <q-input
             v-model="search"
             clearable
@@ -21,6 +21,8 @@
             </template>
           </q-input>
         </div>
+
+        <q-separator />
 
         <ChooseGames @selected="onChooseGameSelected" />
       </template>

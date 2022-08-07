@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { useAppStore } from '../app'
 import { api } from 'src/boot/axios.js'
 import { filters } from 'boot/filters'
+import _ from 'lodash'
 
 // Импорт доп библиотек
 const Web3Modal = window.Web3Modal.default
@@ -125,6 +126,40 @@ export const useAuthStore = defineStore('auth', {
       return true
     },
 
+    async updateLogo (formData) {
+      this._registerErrors = {}
+      await api.post('metapass/update/avatar', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(async () => {
+        await this.tryAuth()
+      }).catch(async (err) => {
+        const response = err.response
+        const data = response.data
+        this._registerErrors = data
+      })
+    },
+
+    async updatePlayerProfile (formData) {
+      await this.updateProfile(formData, 'metapass/update/player/profile')
+    },
+
+    async updateProfile (formData, url) {
+      this._registerErrors = {}
+      await api.post(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(async () => {
+        await this.tryAuth()
+      }).catch(async (err) => {
+        const response = err.response
+        const data = response.data
+        this._registerErrors = data
+      })
+    },
+
     async registerMetapass (formData) {
       this._registerErrors = {}
       await api.post('register', formData, {
@@ -162,6 +197,20 @@ export const useAuthStore = defineStore('auth', {
             metapass.logo = filters.imageFullUrl(metapass.logo)
           }
 
+          if (metapass && metapass.profile) {
+            if (metapass.profile.devices) {
+              metapass.profile.devices = _.map(metapass.profile.devices.split('||'), (item) => {
+                return +parseInt(item)
+              })
+            }
+
+            if (metapass.profile.languages) {
+              metapass.profile.languages = _.map(metapass.profile.languages.split('||'), (item) => {
+                return +parseInt(item)
+              })
+            }
+          }
+
           this._metapass = metapass
           if (data.metapass) {
             api.defaults.headers.common.Authorization = 'Bearer ' + token
@@ -175,8 +224,8 @@ export const useAuthStore = defineStore('auth', {
               await this.login()
             } else {
               this._isLoading = false
-              this.router.push({ name: 'register' })
             }
+            this.router.push({ name: 'profile' })
           } else {
             if (!this._isLoaded) this._isLoaded = true
             this._isLoading = false
@@ -213,6 +262,7 @@ export const useAuthStore = defineStore('auth', {
             provider.disconnect()
           } catch {}
         }
+        this.router.push({ name: 'index' })
         await this.tryAuth()
       }
     },

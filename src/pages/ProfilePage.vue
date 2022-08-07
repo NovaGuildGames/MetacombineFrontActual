@@ -11,15 +11,38 @@
         <div v-if="authStore.metapass">
           <div class="profile">
             <div class="profile__logo">
-              <q-img
-                class="profile__avatar"
-                :src="authStore.metapass.logo"
-              />
+              <q-form
+                class="profile-logo-wrapper"
+                id="updatePlayerLogo"
+                enctype="multipart/form-data"
+                ref="updatePlayerLogo"
+              >
+                <q-img
+                  class="profile__avatar"
+                  :src="authStore.metapass.logo"
+                  v-if="authStore.metapass.logo"
+                />
+
+                <q-img
+                  class="profile__avatar"
+                  src="~assets/no-avatar.svg"
+                  v-else
+                />
+
+                <q-file :display-value="false" class="logo-profile-upload" name="logo" v-model="updateLogo" accept=".jpg, .png"></q-file>
+              </q-form>
             </div>
             <div class="profile__menu">
-              <p class="profile__nickname" v-if="authStore.metapass.name">
-                {{authStore.metapass.name}}
-              </p>
+              <div class="row items-center" v-if="authStore.metapass.name">
+                <div class="col-auto">
+                  <span class="profile__nickname">
+                    {{authStore.metapass.name}}
+                  </span>
+                </div>
+                <div class="col-auto">
+                  <q-btn flat color="primary" @click="authStore.logout">Выход</q-btn>
+                </div>
+              </div>
               <div class="profile__discord row" v-if="authStore.metapass.discord_nickname">
                 <div class="profile__discord-icons">
                   <img src="../../public/icons/discord.svg" alt="discord-icons">
@@ -34,6 +57,10 @@
               <p class="profile__about" v-if="authStore.metapass.description">
                 {{authStore.metapass.description}}
               </p>
+
+              <q-btn class="q-mt-md text-black" color="grey-4" rounded unelevated @click="$router.push({name: 'update-profile'})" v-if="authStore.metapass.type == 1">
+                <q-icon name="fa-solid fa-pencil" class="q-mr-xs" /> Update profile
+              </q-btn>
             </div>
           </div>
 
@@ -60,7 +87,7 @@
                 <div v-if="!billboardStore.advertsLoading">
                   <div v-if="billboardStore.adverts.length > 0">
                     <div class="card-md" v-for="item in billboardStore.adverts" :key="item">
-                      <BillboardTpl :item="item" :isLoading="billboardStore.advertsLoading" :showButtons="authStore.isLoggedIn" />
+                      <BillboardTpl :item="item" :isLoading="billboardStore.advertsLoading" :showButtons="authStore.isLoggedIn" :showDelete="true" />
                     </div>
                   </div>
                   <div v-else>
@@ -122,7 +149,7 @@ export default defineComponent({
   },
   data () {
     return {
-
+      updateLogo: null
     }
   },
   methods: {
@@ -151,6 +178,15 @@ export default defineComponent({
         if (val) {
           await this.initProfile()
         }
+      }
+    },
+
+    updateLogo: {
+      deep: true,
+      async handler (val) {
+        const form = this.$refs.updatePlayerLogo
+        const formData = new FormData(form.$el)
+        await this.authStore.updateLogo(formData)
       }
     }
   }

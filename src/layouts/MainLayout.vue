@@ -31,15 +31,22 @@
           </div>
         </div>
 
-        <q-btn flat no-wrap v-if="authStore.isLoaded && authStore.isLoggedIn">
+        <q-btn flat no-wrap v-if="authStore.isLoaded && authStore.isLoggedIn" @click="$router.push({name: 'profile'})">
             <q-avatar size="2rem">
               <q-img
                 :src="authStore.metapass.logo"
+                v-if="authStore.metapass.logo"
+                :ratio="1/1"
+              />
+
+              <q-img
+                src="~assets/no-avatar.svg"
+                v-else
               />
             </q-avatar>
             <q-icon name="eva-chevron-down-outline" size="1.3rem" />
 
-            <q-menu auto-close>
+            <!--q-menu auto-close>
               <q-list dense>
                 <q-item class="GL__menu-link-signed-in">
                   <q-item-section class="cursor-pointer" @click="gotoProfile">
@@ -52,7 +59,7 @@
                   </q-item-section>
                 </q-item>
               </q-list>
-            </q-menu>
+            </q-menu-->
           </q-btn>
       </q-toolbar>
     </q-header>

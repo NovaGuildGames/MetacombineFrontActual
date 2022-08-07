@@ -1,6 +1,7 @@
 <template>
   <div class="q-my-lg q-py-lg">
     <swiper
+      v-if="elements && elements.length > 0"
       :slidesPerView="6"
       :spaceBetween="38"
       :draggable="true"
@@ -18,6 +19,9 @@
         <GameCardTpl :item="item" @selected="$emit('selected', item)" :isLoading="billboardStore.chooseGamesLoading" />
       </swiper-slide>
     </swiper>
+    <div v-else class="chooseNo">
+      <h4 class="q-mt-none">No results</h4>
+    </div>
   </div>
 </template>
 
