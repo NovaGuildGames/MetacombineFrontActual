@@ -33,7 +33,7 @@
             <div class="row items-center">
               <div class="col">
                 <h3 class="text-h3">
-                  Go play
+                  Billboard
                 </h3>
               </div>
               <div class="col-auto" v-if="authStore.isLoggedIn">

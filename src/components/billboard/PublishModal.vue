@@ -6,7 +6,7 @@
 
         <q-card-section class="q-pt-md q-mt-sm">
           <div class="text-h6 fw-600">
-            Everything is fine!
+            Good job!
           </div>
           <div class="q-mt-md lh13">
             Your billboard has been successfully published
@@ -14,7 +14,7 @@
         </q-card-section>
 
         <q-card-section class="q-mb-xs" align="left">
-          <q-btn label="Good" color="primary" v-close-popup />
+          <q-btn label="Got it!" color="primary" v-close-popup />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -26,7 +26,7 @@
             <div class="col-auto">
               <div class="row items-center justify-between q-mb-lg">
                 <div class="col-auto">
-                  <q-btn flat label="New ad" icon="close" class="text-weight-medium q-px-none icon-gray" :ripple="false" @click="closeModal" />
+                  <q-btn flat label="New billboard" icon="close" class="text-weight-medium q-px-none icon-gray" :ripple="false" @click="closeModal" />
                 </div>
 
                 <div>
@@ -50,7 +50,7 @@
 
                   <div>
                     <div class="input-label">
-                      Name game
+                      Game
                     </div>
 
                     <q-select filled dense :map-options="true" :emit-value="true" v-model="billboard.game_id" :options="appStore.lists.games" @filter="(val, update) => filterUpdate(val, update, 'games')" use-input required />
@@ -58,7 +58,7 @@
 
                   <div>
                     <div class="input-label">
-                      Options
+                      Type
                     </div>
 
                     <q-toggle

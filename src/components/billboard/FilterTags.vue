@@ -9,7 +9,7 @@
 
       <div class="col-auto" v-if="filtersCheck.lang">
         <q-btn :color="filter.lang ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true">
-          Lang<span v-if="filter.lang">: {{findLabel('langs', filter.lang)}}</span> <q-icon name="fa-solid fa-chevron-down" class="q-ml-xs" size="0.8rem" />
+          Language<span v-if="filter.lang">: {{findLabel('langs', filter.lang)}}</span> <q-icon name="fa-solid fa-chevron-down" class="q-ml-xs" size="0.8rem" />
 
           <q-menu fit>
             <q-list dense>
@@ -25,7 +25,7 @@
 
       <div class="col-auto" v-if="filtersCheck.game_type">
         <q-btn :color="filter.game_type ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true">
-          Game type<span v-if="filter.game_type">: {{findLabel('game_types', filter.game_type)}}</span> <q-icon name="fa-solid fa-chevron-down" class="q-ml-xs" size="0.8rem" />
+          Type<span v-if="filter.game_type">: {{findLabel('game_types', filter.game_type)}}</span> <q-icon name="fa-solid fa-chevron-down" class="q-ml-xs" size="0.8rem" />
 
           <q-menu fit>
             <q-list dense>
