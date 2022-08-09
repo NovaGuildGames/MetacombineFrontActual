@@ -9,6 +9,10 @@
         </div>
       </div>
 
+      <pre>
+        {{authStore.metapass}}
+      </pre>
+
       <div v-if="authStore.metapass">
         <!-- Player -->
         <div v-if="authStore.metapass.type == 1" class="row full-width justify-center">
@@ -19,8 +23,8 @@
               class="q-gutter-md"
               ref="updatePlayerForm"
             >
-                <q-input class="q-mb-md" v-model="authStore.metapass.profile.nickname" placeholder="Nickname*" name="nickname" dense filled :rules="[ async val => await authStore.validate('nickname', 'Nickname') ]" />
-                <q-input class="q-mb-md" v-model="authStore.metapass.profile.discord_nickname" dense placeholder="Discord Nickname#0000 *" name="discord_nickname" :rules="[ async val => await authStore.validate('discord_nickname', 'Discord nickname') ]" filled/>
+                <q-input class="q-mb-md" v-model="authStore.metapass.profile.nickname" placeholder="Nickname*" name="nickname" dense filled :reactive-rules="true" :rules="[ async val => await authStore.validate('nickname', 'Nickname') ]" />
+                <q-input class="q-mb-md" v-model="authStore.metapass.profile.discord_nickname" dense placeholder="Discord Nickname#0000 *" name="discord_nickname" :reactive-rules="true" :rules="[ async val => await authStore.validate('discord_nickname', 'Discord nickname') ]" filled/>
 
                 <p class="q-mb-md">Description/Bio*</p>
                 <q-editor class="q-mb-md" v-model="authStore.metapass.profile.description" min-height="6rem" />

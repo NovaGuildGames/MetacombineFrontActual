@@ -106,18 +106,9 @@ export const useAuthStore = defineStore('auth', {
       web3Modal.clearCachedProvider()
     },
 
-    async hasError (key, label) {
-      const items = this._registerErrors
-      if (items && items.errors) {
-        if (key in items.errors) {
-          return true
-        }
-      }
-      return false
-    },
-
     async validate (key, label) {
       const items = this._registerErrors
+
       if (items && items.errors) {
         if (key in items.errors) {
           return label + ': ' + items.errors[key].join(', ')
@@ -214,6 +205,7 @@ export const useAuthStore = defineStore('auth', {
           this._metapass = metapass
           if (data.metapass) {
             api.defaults.headers.common.Authorization = 'Bearer ' + token
+            this.router.push({ name: 'profile' })
           }
 
           this._isVerified = data.verified
@@ -224,8 +216,8 @@ export const useAuthStore = defineStore('auth', {
               await this.login()
             } else {
               this._isLoading = false
+              this.router.push({ name: 'register' })
             }
-            this.router.push({ name: 'profile' })
           } else {
             if (!this._isLoaded) this._isLoaded = true
             this._isLoading = false
