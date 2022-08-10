@@ -182,6 +182,25 @@
           size="5em"
         />
       </div>
+
+      <q-dialog v-model="authStore._whiteListError">
+        <q-card class="published-modal">
+          <q-card-section class="publish-modal-header"></q-card-section>
+
+          <q-card-section class="q-pt-md q-mt-sm">
+            <div class="text-h6 fw-600">
+              Something went wrong!
+            </div>
+            <div class="q-mt-md lh13">
+              Sorry, but you're not in the White List for testnet. Kindly apply for that!
+            </div>
+          </q-card-section>
+
+          <q-card-section class="q-mb-xs" align="left">
+            <q-btn label="Apply for testnet" color="primary" v-close-popup @click="applyTestNet"/>
+          </q-card-section>
+        </q-card>
+      </q-dialog>
     </div>
   </q-page>
 </template>
@@ -232,6 +251,10 @@ export default defineComponent({
     }
   },
   methods: {
+    async applyTestNet () {
+      window.open('https://docs.google.com/forms/d/e/1FAIpQLSf8uhYQX48o2RqFdxLuN0gkwYPEQWr63HT1bShnK3FSlnkXQw/alreadyresponded', '_BLANK')
+    },
+
     async filterUpdate (val, update, key) {
       update(async () => {
         this.appStore.loadList(key, val)

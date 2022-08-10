@@ -9,9 +9,9 @@
         </div>
       </div>
 
-      <pre>
+      <!--pre>
         {{authStore.metapass}}
-      </pre>
+      </pre-->
 
       <div v-if="authStore.metapass">
         <!-- Player -->
