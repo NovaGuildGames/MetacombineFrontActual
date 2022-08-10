@@ -108,11 +108,6 @@
 
           <PublishModal />
         </div>
-        <div v-else>
-          <h3 style="color: red">
-            Вы не авторизированы
-          </h3>
-        </div>
       </div>
     </div>
   </q-page>
@@ -169,6 +164,8 @@ export default defineComponent({
   async mounted () {
     if (this.authStore.isLoggedIn) {
       await this.initProfile()
+    } else {
+      this.$router.push({ name: 'register' })
     }
   },
   watch: {

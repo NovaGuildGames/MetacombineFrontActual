@@ -57,8 +57,8 @@
               >
                 <div>
                   <!--q-select class="q-mb-md" v-model="type" :options="types" dense map-options emit-value filled/-->
-                  <q-input class="q-mb-md" v-model="register.player.nickname" placeholder="Nickname*" name="nickname" dense filled :rules="[ async val => await authStore.validate('nickname', 'Nickname') ]" />
-                  <q-input class="q-mb-md" v-model="register.player.discord_nickname" dense placeholder="Discord Nickname#0000 *" name="discord_nickname" :rules="[ async val => await authStore.validate('discord_nickname', 'Discord nickname') ]" filled/>
+                  <q-input class="q-mb-md" v-model="register.player.nickname" placeholder="Nickname*" name="nickname" :reactive-rules="true" dense filled :rules="[ async val => await authStore.validate('nickname', 'Nickname') ]" />
+                  <q-input class="q-mb-md" v-model="register.player.discord_nickname" dense placeholder="Discord Nickname#0000 *" name="discord_nickname" :reactive-rules="true" :rules="[ async val => await authStore.validate('discord_nickname', 'Discord nickname') ]" filled/>
                 </div>
 
                 <!--div v-if="showMorePlayer">
