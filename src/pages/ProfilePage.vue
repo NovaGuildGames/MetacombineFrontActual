@@ -40,7 +40,7 @@
                   </span>
                 </div>
                 <div class="col-auto">
-                  <q-btn flat color="primary" @click="authStore.logout">Выход</q-btn>
+                  <q-btn flat color="primary" @click="authStore.logout">Log out</q-btn>
                 </div>
               </div>
               <div class="profile__discord row" v-if="authStore.metapass.discord_nickname">
