@@ -28,7 +28,7 @@
       </template>
 
       <div class="row">
-        <div class="col-8">
+        <div class="col-auto col-billboard">
           <template v-if="!billboardStore.advertsFirstPage">
             <div class="row items-center">
               <div class="col">
@@ -71,6 +71,12 @@
           </div>
 
           <Pagination :links="billboardStore.advertsPagination" :isLoading="billboardStore.advertsLoading" @onPaginate="onPaginate" />
+        </div>
+
+        <div class="col-auto col-rightboard">
+          <q-btn color="primary" @click="openGoogleDocs()">
+            Testnet feedback
+          </q-btn>
         </div>
       </div>
 
@@ -132,6 +138,10 @@ export default defineComponent({
     }
   },
   methods: {
+    openGoogleDocs () {
+      window.open('https://docs.google.com/forms/d/e/1FAIpQLSfX3lUW7NsMBGhMHyZkg5eFGEPWuyQO0PoNICdLwniKZBBcQA/viewform?usp=sf_link', '_BLANK')
+    },
+
     onPaginate (url) {
       this.billboardStore.loadAdverts(url)
     },

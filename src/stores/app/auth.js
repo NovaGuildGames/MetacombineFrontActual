@@ -25,10 +25,15 @@ export const useAuthStore = defineStore('auth', {
     _address: null,
     _token: null,
     _metapass: null,
-    _registerErrors: null
+    _registerErrors: null,
+    _whiteListError: false
   }),
 
   getters: {
+    whiteListError (state) {
+      return state._whiteListError
+    },
+
     isLoaded (state) {
       return state._isLoaded
     },
@@ -80,7 +85,7 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async initializeAuth () {
-      await this.tryAuth()
+      await this.tryAuth({ init: true })
 
       const appStore = useAppStore()
       const infuraKey = appStore.config.infura_key
@@ -163,10 +168,20 @@ export const useAuthStore = defineStore('auth', {
         const response = err.response
         const data = response.data
         this._registerErrors = data
+        this.updateCheckErrors(data)
       })
     },
 
-    async tryAuth () {
+    async updateCheckErrors (errors) {
+      if (errors && ('errors' in errors)) {
+        const errorslist = errors.errors
+        if (('address' in errorslist) && (errorslist.address.indexOf('validation.exists') !== -1)) {
+          this._whiteListError = true
+        }
+      }
+    },
+
+    async tryAuth (params) {
       this._isLoading = true
       const token = localStorage.getItem('auth_token')
       const address = this.address
@@ -205,7 +220,9 @@ export const useAuthStore = defineStore('auth', {
           this._metapass = metapass
           if (data.metapass) {
             api.defaults.headers.common.Authorization = 'Bearer ' + token
-            this.router.push({ name: 'profile' })
+            if (!params || !params.init) {
+              this.router.push({ name: 'profile' })
+            }
           }
 
           this._isVerified = data.verified
