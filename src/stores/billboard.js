@@ -40,7 +40,8 @@ export const useBillboardStore = defineStore('billboard', {
     _advertsLoading: false,
     _adverts: [],
     _adverts_pagination: [],
-    _error: null
+    _error: null,
+    _lastId: null
   }),
 
   getters: {
@@ -241,6 +242,8 @@ export const useBillboardStore = defineStore('billboard', {
       data.name = data.name.slice(0, 100)
 
       await api.post('billboard/add/advert', data).then(async (res) => {
+        const id = +parseInt(res.data.replace(/[\D]/ui, ''))
+        console.log('pub', id)
         await this.loadAdverts()
         this._isModalOpened = false
         this._isPublished = true
