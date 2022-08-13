@@ -190,6 +190,12 @@ export default defineComponent({
       if (val) {
         this.billboard.game_id = val.id
       }
+    },
+
+    async 'billboardStore._isPublished' (newVal, oldVal) {
+      if (!newVal && oldVal) {
+        console.log('Опубликовано!')
+      }
     }
   }
 })
