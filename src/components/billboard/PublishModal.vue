@@ -194,7 +194,10 @@ export default defineComponent({
 
     async 'billboardStore._isPublished' (newVal, oldVal) {
       if (!newVal && oldVal) {
-        console.log('Опубликовано!')
+        this.billboardStore.goPlay({
+          onlyid: true,
+          id: this.billboardStore._lastId
+        })
       }
     }
   }

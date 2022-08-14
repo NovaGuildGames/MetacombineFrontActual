@@ -144,6 +144,10 @@ export const useBillboardStore = defineStore('billboard', {
     },
 
     async goPlay (item) {
+      let onlyid = false
+      if (item.onlyid) {
+        onlyid = true
+      }
       const id = item.id
       const appStore = useAppStore()
 
@@ -155,11 +159,11 @@ export const useBillboardStore = defineStore('billboard', {
             disableLoader: true
           })
 
-          const item = await _.find(this.adverts, (current) => {
+          const xitem = await _.find(this.adverts, (current) => {
             return current.id === id
           })
 
-          if (item) {
+          if (xitem && !onlyid) {
             item.discord_link = result.data.url
           }
         }
@@ -193,7 +197,6 @@ export const useBillboardStore = defineStore('billboard', {
     async loadChooseGames (append) {
       let url = 'billboard/choose/games'
 
-      console.log(append)
       if (append) {
         if (this._chooseGames.length <= 0) return
         if (this.chooseGamesNext) {
@@ -242,8 +245,12 @@ export const useBillboardStore = defineStore('billboard', {
       data.name = data.name.slice(0, 100)
 
       await api.post('billboard/add/advert', data).then(async (res) => {
-        const id = +parseInt(res.data.replace(/[\D]/ui, ''))
-        console.log('pub', id)
+        const rawData = res.data
+        console.log(rawData)
+        if (rawData.success && rawData.id) {
+          this._lastId = rawData.id
+        }
+
         await this.loadAdverts()
         this._isModalOpened = false
         this._isPublished = true
