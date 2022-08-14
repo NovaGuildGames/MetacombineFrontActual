@@ -89,6 +89,10 @@ export const useBillboardStore = defineStore('billboard', {
       return state._chooseGamesPrev
     },
 
+    chooseGamesNext (state) {
+      return state._chooseGamesNext
+    },
+
     chooseGamesLoading (state) {
       return state._chooseGamesLoading
     },
@@ -188,9 +192,13 @@ export const useBillboardStore = defineStore('billboard', {
 
     async loadChooseGames (append) {
       let url = 'billboard/choose/games'
+
+      console.log(append)
       if (append) {
         if (this._chooseGames.length <= 0) return
-        url = this._chooseGamesNext
+        if (this.chooseGamesNext) {
+          url = this.chooseGamesNext
+        }
       } else {
         this._chooseGamesLoading = true
       }
@@ -224,14 +232,6 @@ export const useBillboardStore = defineStore('billboard', {
           this._chooseGames = _.union(this._chooseGames, result)
         } else {
           this._chooseGames = result
-
-          /*
-          if (!this._selectedGame) {
-            await this.setCurrentGame(_.head(result))
-            await this.loadAdverts()
-          }
-          */
-
           this._chooseGamesLoading = false
         }
       })

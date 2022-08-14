@@ -69,7 +69,9 @@ export default defineComponent({
   },
   methods: {
     async onReachEnd () {
-      await this.billboardStore.loadChooseGames(true)
+      if (!this.billboardStore._search) {
+        await this.billboardStore.loadChooseGames(true)
+      }
     }
   },
   computed: {
