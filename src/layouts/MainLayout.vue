@@ -31,7 +31,7 @@
           </div>
         </div>
 
-        <q-btn flat no-wrap v-if="authStore.isLoaded && authStore.isLoggedIn" @click="$router.push({name: 'profile'})">
+        <q-btn class="header__avatar" flat no-wrap v-if="authStore.isLoaded && authStore.isLoggedIn" @click="$router.push({name: 'profile'})">
             <q-avatar size="2rem">
               <q-img
                 :src="authStore.metapass.logo"
@@ -44,8 +44,9 @@
                 v-else
               />
             </q-avatar>
-            <q-icon name="eva-chevron-down-outline" size="1.3rem" />
-
+            <div class="arrow">
+              <q-icon name="eva-chevron-down-outline" size="1.3rem" />
+            </div>
             <!--q-menu auto-close>
               <q-list dense>
                 <q-item class="GL__menu-link-signed-in">
@@ -74,8 +75,8 @@
 
     <q-footer class="bg-white text-black">
       <div class="container q-mb-lg q-pb-sm">
-        <div class="row">
-          <div class="col" color="secondary">
+        <div class="footer__wrap">
+          <div class="footer__links" color="secondary">
             <q-btn flat size="md" class="q-mr-md">
               Cookies policy
             </q-btn>
