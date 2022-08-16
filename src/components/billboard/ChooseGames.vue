@@ -2,8 +2,29 @@
   <div class="q-my-lg q-py-lg">
     <swiper
       v-if="elements && elements.length > 0"
-      :slidesPerView="6"
-      :spaceBetween="38"
+      :breakpoints="{
+
+        0: {
+          slidesPerView: 2,
+          spaceBetween: 10,
+        },
+
+        520: {
+          slidesPerView: 3,
+          spaceBetween: 20,
+        },
+
+        800: {
+          slidesPerView: 4,
+          spaceBetween: 30,
+        },
+
+        1024: {
+          slidesPerView: 6,
+          spaceBetween: 40,
+        },
+
+      }"
       :draggable="true"
       :mousewheel="{forceToAxis: true}"
       :modules="modules"
