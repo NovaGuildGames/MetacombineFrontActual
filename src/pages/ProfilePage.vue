@@ -33,7 +33,7 @@
               </q-form>
             </div>
             <div class="profile__menu">
-              <div class="row items-center" v-if="authStore.metapass.name">
+              <div class="row items-center row1" v-if="authStore.metapass.name">
                 <div class="col-auto">
                   <span class="profile__nickname">
                     {{authStore.metapass.name}}
@@ -52,11 +52,11 @@
                 </p>
               </div>
               <div class="profile__language row" v-if="authStore.metapass.languages && authStore.metapass.languages.length > 0">
-                <p>{{authStore.metapass.languages.join(', ')}}</p>
+                <div>{{authStore.metapass.languages.join(', ')}}</div>
               </div>
-              <p class="profile__about" v-if="authStore.metapass.description">
+              <div class="profile__about" v-if="authStore.metapass.description">
                 {{authStore.metapass.description}}
-              </p>
+              </div>
 
               <q-btn class="q-mt-md text-black" color="grey-4" rounded unelevated @click="$router.push({name: 'update-profile'})" v-if="authStore.metapass.type == 1">
                 <q-icon name="fa-solid fa-pencil" class="q-mr-xs" /> Update profile

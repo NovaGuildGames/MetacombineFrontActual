@@ -4,6 +4,11 @@
   margin: 0;
 }
 
+.my3 {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
 .q-field--standard .q-field__control:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
@@ -456,6 +461,7 @@ $padding: 0.72rem;
   position: relative;
   overflow: hidden;
   border-radius: 50%;
+  display: inline-block;
 }
 
 .logo-profile-upload {
@@ -621,5 +627,62 @@ $padding: 0.72rem;
   .card__players {
     margin-left: 24px;
     margin-top: 0px;
+  }
+}
+
+@media (max-width: 575px) {
+  .q-chip {
+    //height: auto;
+  }
+
+  .my3 {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .card__players {
+    width: 50%;
+  }
+
+  html {
+    font-size: 15px;
+  }
+
+  .card__body {
+    width: 100%;
+  }
+
+  .modal-back .modal-back-inner {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .profile {
+    display: block;
+    padding: 25px 0 25px 0;
+  }
+
+  .profile__logo {
+    text-align: center;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .profile__menu {
+    padding-left: 0px;
+  }
+
+  .row1 {
+    display: block;
+    text-align: center;
+  }
+
+  .profile__discord, .profile__language {
+    justify-content: center;
+  }
+
+  .profile__about {
+    text-align: center;
+    margin-top: 10px;
   }
 }
