@@ -6,14 +6,14 @@
           <q-card-section>
             <div class="row items-center justify-between q-mb-md" v-if="item.name_game">
               <div class="col-auto">
-                <div class="row items-center">
+                <div class="items-center my-card__header">
                   <div>
                     <div class="footer-sb">
                       {{item.name_game}}
                     </div>
                   </div>
 
-                  <div class="q-ml-sm" v-if="item.game_devices">
+                  <div class="q-ml-sm card__devices" v-if="item.game_devices">
                     <q-chip v-for="device in item.game_devices" :key="device" outline color="grey" size="sm">
                       {{device}}
                     </q-chip>
@@ -28,7 +28,7 @@
               </div>
             </div>
 
-            <div class="row items-center">
+            <div class="card__body items-center">
               <div class="col-auto">
                 <div class="row items-center">
                   <div class="col-auto q-mr-md">
@@ -59,7 +59,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-auto q-ml-lg">
+              <div class="col-auto card__players">
                 <div v-if="!item.spots_full">
                   <div class="row items-end">
                     <div class="col-auto ">
