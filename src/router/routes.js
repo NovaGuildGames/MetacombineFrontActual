@@ -23,6 +23,11 @@ const routes = [
         component: () => import('pages/UpdateProfilePage.vue'),
         name: 'update-profile'
       },
+      {
+        path: 'discord-link',
+        component: () => import('pages/DiscordPlaceholder.vue'),
+        name: 'discord-link'
+      },
       /*
       {
         path: '/billboard/:game',

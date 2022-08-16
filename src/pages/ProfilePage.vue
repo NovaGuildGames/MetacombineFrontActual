@@ -58,9 +58,11 @@
                 {{authStore.metapass.description}}
               </div>
 
-              <q-btn class="q-mt-md text-black" color="grey-4" rounded unelevated @click="$router.push({name: 'update-profile'})" v-if="authStore.metapass.type == 1">
-                <q-icon name="fa-solid fa-pencil" class="q-mr-xs" /> Update profile
-              </q-btn>
+              <div class="updateBtn-wrapper">
+                <q-btn class="q-mt-md text-black" color="grey-4" rounded unelevated @click="$router.push({name: 'update-profile'})" v-if="authStore.metapass.type == 1">
+                  <q-icon name="fa-solid fa-pencil" class="q-mr-xs" /> Update profile
+                </q-btn>
+              </div>
             </div>
           </div>
 

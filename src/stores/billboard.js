@@ -152,7 +152,7 @@ export const useBillboardStore = defineStore('billboard', {
     goPlay (item) {
       const id = item.id
       const appStore = useAppStore()
-      openedWindow = window.open()
+      openedWindow = window.open('/discord-link')
       api.post('billboard/play/' + id, null, {}).then(result => {
         if (result.data.url) {
           this.loadAdverts({
