@@ -111,7 +111,7 @@
 
             <div class="q-mt-md">
               <q-btn color="secondary" size="md" class="text-black" unelevated label="Go play" @click="goPlay" />
-              <q-btn flat color="primary" class="q-ml-md" size="md" label="Copy Discord link" v-if="item.discord_link" @click.prevent="copyLink"/>
+              <q-btn flat color="primary" class="q-ml-md" size="md" label="Copy Discord link" v-if="('L' + item.id) in billboardStore.discordLinks" :href="billboardStore.discordLinks['L' + item.id]" target="_BLANK" />
             </div>
           </q-card-section>
         </q-card>

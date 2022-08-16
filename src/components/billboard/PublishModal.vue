@@ -192,7 +192,7 @@ export default defineComponent({
       }
     },
 
-    async 'billboardStore._isPublished' (newVal, oldVal) {
+    'billboardStore._isPublished' (newVal, oldVal) {
       if (!newVal && oldVal) {
         this.billboardStore.goPlay({
           onlyid: true,

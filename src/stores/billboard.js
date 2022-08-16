@@ -4,6 +4,7 @@ import { filters } from 'boot/filters'
 import _ from 'lodash'
 
 import { useAppStore } from 'src/stores/app'
+let openedWindow = null
 
 export const useBillboardStore = defineStore('billboard', {
   state: () => ({
@@ -41,10 +42,15 @@ export const useBillboardStore = defineStore('billboard', {
     _adverts: [],
     _adverts_pagination: [],
     _error: null,
-    _lastId: null
+    _lastId: null,
+    _discordLinks: {}
   }),
 
   getters: {
+    discordLinks (state) {
+      return state._discordLinks
+    },
+
     discordLink (state) {
       return state._discordLink
     },
@@ -143,41 +149,33 @@ export const useBillboardStore = defineStore('billboard', {
       }
     },
 
-    async goPlay (item) {
-      let onlyid = false
-      if (item.onlyid) {
-        onlyid = true
-      }
+    goPlay (item) {
       const id = item.id
       const appStore = useAppStore()
-
-      try {
-        const result = await api.post('billboard/play/' + id, null, {})
+      openedWindow = window.open()
+      api.post('billboard/play/' + id, null, {}).then(result => {
         if (result.data.url) {
-          window.open(result.data.url, '_blank').focus()
-          await this.loadAdverts({
+          this.loadAdverts({
             disableLoader: true
           })
 
-          const xitem = await _.find(this.adverts, (current) => {
-            return current.id === id
-          })
+          this._discordLinks['L' + id] = result.data.url
 
-          if (xitem && !onlyid) {
-            item.discord_link = result.data.url
-          }
+          openedWindow.location = result.data.url
+        } else {
+          openedWindow.close()
         }
-      } catch (e) {
+      }).catch(e => {
         const data = e.response.data
         if (data.type) {
-          await appStore.setErrors(data.type, {
+          appStore.setErrors(data.type, {
             async: true,
             store: 'billboard',
             name: 'goPlay',
             arguments
           })
         }
-      }
+      })
     },
 
     async setCurrentUser (state) {
