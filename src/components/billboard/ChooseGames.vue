@@ -1,12 +1,12 @@
 <template>
-  <div class="q-my-lg q-py-lg">
+  <div class="my3">
     <swiper
       v-if="elements && elements.length > 0"
       :breakpoints="{
 
         0: {
           slidesPerView: 2,
-          spaceBetween: 10,
+          spaceBetween: 20,
         },
 
         520: {

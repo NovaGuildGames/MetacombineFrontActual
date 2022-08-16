@@ -54,7 +54,7 @@
                     </div>
 
                     <div class="text-grey-8 text-caption q-mt-xs">
-                      {{moment(item.created_at).fromNow()}}
+                      {{$filters.dateMy(item.created_at)}}
                     </div>
                   </div>
                 </div>

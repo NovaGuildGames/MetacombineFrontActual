@@ -27,8 +27,7 @@
                 <q-input class="q-mb-md" v-model="authStore.metapass.profile.discord_nickname" dense placeholder="Discord Nickname#0000 *" name="discord_nickname" :reactive-rules="true" :rules="[ async val => await authStore.validate('discord_nickname', 'Discord nickname') ]" filled/>
 
                 <p class="q-mb-md">Description/Bio*</p>
-                <q-editor class="q-mb-md" v-model="authStore.metapass.profile.description" min-height="6rem" />
-                <input type="hidden" v-model="authStore.metapass.profile.description" name="description" />
+                <q-input type="text" v-model="authStore.metapass.profile.description" name="description" filled autogrow min-height="6rem" />
 
                 <q-select class="q-mb-md" clearable v-model="authStore.metapass.profile.location_id" :emit-value="true" dense placeholder="Location" name="location_id" :options="appStore.lists.locations" @filter="(val, update) => filterUpdate(val, update, 'locations')" use-input use-chips stack-label map-options filled/>
 
