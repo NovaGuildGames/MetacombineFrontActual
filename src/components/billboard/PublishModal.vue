@@ -107,7 +107,7 @@
                     />
                   </div>
 
-                  <div>
+                  <!--div>
                     <div class="input-label">
                       Options
                     </div>
@@ -116,7 +116,7 @@
                       v-model="billboard.voice_chat"
                       label="Add voice chat"
                     />
-                  </div>
+                  </div-->
 
                   <div class="q-mt-lg">
                     <div class="q-mb-md">
