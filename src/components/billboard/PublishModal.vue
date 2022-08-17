@@ -53,7 +53,7 @@
                       Game
                     </div>
 
-                    <q-select filled dense :map-options="true" :emit-value="true" v-model="billboard.game_id" :options="appStore.lists.games" @filter="(val, update) => filterUpdate(val, update, 'games')" use-input required />
+                    <q-select filled dense :map-options="true" :emit-value="true" v-model="billboard.game_id" :options="appStore.lists.games" @filter="(val, update) => filterUpdate(val, update, 'games')" :reactive-rules="true" :rules="[ async val => await billboardStore.validate('game_id', 'Game') ]" use-input required />
                   </div>
 
                   <div>
@@ -79,14 +79,42 @@
 
                   <div>
                     <div class="input-label">
+                      Short name
+                    </div>
+                    <q-input
+                      :reactive-rules="true" :rules="[ async val => await billboardStore.validate('name', 'Short name') ]"
+                      filled
+                      required
+                      class="default-textarea"
+                      v-model="billboard.name"
+                      placeholder="Text"
+                      maxlength="100"
+                    />
+                  </div>
+
+                  <div>
+                    <div class="input-label">
                       Content
                     </div>
                     <q-input
+                      :reactive-rules="true" :rules="[ async val => await billboardStore.validate('description', 'Content') ]"
                       filled
+                      required
                       class="default-textarea"
-                      v-model="billboard.name"
+                      v-model="billboard.description"
                       type="textarea"
                       placeholder="Text"
+                    />
+                  </div>
+
+                  <div>
+                    <div class="input-label">
+                      Options
+                    </div>
+
+                    <q-toggle
+                      v-model="billboard.voice_chat"
+                      label="Add voice chat"
                     />
                   </div>
 
@@ -162,6 +190,7 @@ export default defineComponent({
         nft: false,
         p2e: false,
         f2p: false,
+        voice_chat: false,
         name: null,
         spots_all: 2
       },

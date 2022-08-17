@@ -43,10 +43,15 @@ export const useBillboardStore = defineStore('billboard', {
     _adverts_pagination: [],
     _error: null,
     _lastId: null,
-    _discordLinks: {}
+    _discordLinks: {},
+    _advertErrors: null
   }),
 
   getters: {
+    advertErrors (state) {
+      return state._advertErrors
+    },
+
     discordLinks (state) {
       return state._discordLinks
     },
@@ -132,6 +137,17 @@ export const useBillboardStore = defineStore('billboard', {
   },
 
   actions: {
+    async validate (key, label) {
+      const items = this._advertErrors
+
+      if (items && items.errors) {
+        if (key in items.errors) {
+          return label + ': ' + items.errors[key].join(', ')
+        }
+      }
+      return true
+    },
+
     async unsetGame () {
       this._selectedGame = null
       this.loadAdverts()
@@ -239,12 +255,9 @@ export const useBillboardStore = defineStore('billboard', {
     },
 
     async publish (data) {
-      data.additional_info = data.name
-      data.name = data.name.slice(0, 100)
-
+      this._advertErrors = null
       await api.post('billboard/add/advert', data).then(async (res) => {
         const rawData = res.data
-        console.log(rawData)
         if (rawData.success && rawData.id) {
           this._lastId = rawData.id
         }
@@ -253,7 +266,9 @@ export const useBillboardStore = defineStore('billboard', {
         this._isModalOpened = false
         this._isPublished = true
       }).catch(async (err) => {
-        console.log('err', err)
+        const response = err.response
+        const data = response.data
+        this._advertErrors = data
       })
     },
 

@@ -78,7 +78,7 @@
                   <div class="row items-center">
                     <div class="col-auto ">
                       <div class="text-h6 text-weight-bold">
-                        <div class="circles-wrapper" :style="{width: (logosShow.length+1)+'rem'}">
+                        <div class="circles-wrapper" :class="{ isOne: logosShow.length <= 1 }" :style="{width: (logosShow.length+1)+'rem'}">
                           <div class="circle-inner" v-for="(itemx, index) in logosShow" :key="index">
                             <q-avatar class="circle-avatar" size="32px" v-if="index < 3">
                               <img :src="itemx" v-if="itemx" />
@@ -105,8 +105,14 @@
               </div>
             </div>
 
-            <div class="f1 q-my-md text-black">
-              {{item.text}}
+            <div class="q-my-md">
+              <div class="footer-sb q-mt-sm" v-if="item.advert_name">
+                {{item.advert_name}}
+              </div>
+
+              <div class="f1 text-black">
+                {{item.text}}
+              </div>
             </div>
 
             <div class="q-mt-md">
@@ -117,7 +123,7 @@
         </q-card>
       </div>
 
-      <div class="col-auto" v-if="showDelete">
+      <div class="col-auto" v-if="showDelete && isMine">
         <div class="cursor-pointer item-action" @click.prevent="deleteItem(item)">
           <q-icon name="fa-solid fa-trash-can" size="1rem" />
         </div>

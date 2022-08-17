@@ -82,7 +82,7 @@
                   </div>
                 </div>
 
-                <FilterTagsProfile :filters="['game', 'lang', 'game_type', 'android', 'ios', 'desktop', 'reset']" />
+                <FilterTagsProfile />
               </template>
 
               <div class="q-mt-lg">

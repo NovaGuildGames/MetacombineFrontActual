@@ -2,14 +2,20 @@
   <div>
     <div class="row items-center">
       <div class="col-auto">
-        <q-btn :color="!filter.archive ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" @click.prevent="delete filter.archive">
+        <q-btn :color="filter.active ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" @click.prevent="onFilterActive">
           Active
         </q-btn>
       </div>
 
       <div class="col-auto">
-        <q-btn :color="filter.archive ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" @click.prevent="filter.archive = true">
+        <q-btn :color="filter.archive ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" @click.prevent="onFilterArchive">
           Archive
+        </q-btn>
+      </div>
+
+      <div class="col-auto">
+        <q-btn :color="filter.applied ? 'grey-4' : 'secondary'" rounded unelevated class="q-mr-md q-mb-sm text-black text-weight-medium" :no-ripple="true" @click.prevent="onFilterApplied">
+          My applied
         </q-btn>
       </div>
     </div>
@@ -47,7 +53,28 @@ export default defineComponent({
   },
   data () {
     return {
-      filter: {}
+      filter: {
+        active: true
+      }
+    }
+  },
+  methods: {
+    onFilterActive () {
+      delete this.filter.archive
+      delete this.filter.applied
+      this.filter.active = true
+    },
+
+    onFilterArchive () {
+      delete this.filter.active
+      delete this.filter.applied
+      this.filter.archive = true
+    },
+
+    onFilterApplied () {
+      delete this.filter.active
+      delete this.filter.archive
+      this.filter.applied = true
     }
   },
   watch: {
