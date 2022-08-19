@@ -86,7 +86,7 @@
                       class="default-textarea"
                       v-model="billboard.name"
                       type="textarea"
-                      placeholder="Text"
+                      placeholder="Create an attractive offer to get more applications"
                     />
                   </div>
 

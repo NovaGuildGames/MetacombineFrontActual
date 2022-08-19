@@ -77,21 +77,30 @@
       <div class="container q-mb-lg q-pb-sm">
         <div class="footer__wrap">
           <div class="footer__links" color="secondary">
-            <q-btn flat size="md" class="q-mr-md">
+            <!-- <q-btn flat size="md" class="q-mr-md">
               Cookies policy
-            </q-btn>
+            </q-btn> -->
 
-            <q-btn flat size="md" class="q-mr-md">
+            <!-- <q-btn flat size="md" class="q-mr-md">
               Privacy policy
-            </q-btn>
+            </q-btn> -->
 
-            <q-btn flat size="md" class="q-mr-md">
+            <q-btn flat size="md" class="q-mr-md" target="_blank" href="https://www.linkedin.com/company/81800430/">
               Linkedin
             </q-btn>
 
-            <q-btn flat size="md" class="q-mr-md">
-              Youtube
+            <q-btn flat size="md" class="q-mr-md" target="_blank" href="https://twitter.com/MetaCombine">
+              Twitter
             </q-btn>
+
+            <q-btn flat size="md" class="q-mr-md" target="_blank" href="https://discord.com/invite/pXR4tCgHTv">
+              Discord
+            </q-btn>
+
+            <q-btn flat size="md" class="q-mr-md" target="_blank" href="https://t.me/MetaCombine">
+              Telegram
+            </q-btn>
+
           </div>
         </div>
       </div>
