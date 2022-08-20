@@ -85,12 +85,16 @@
               Privacy policy
             </q-btn>
 
-            <q-btn flat size="md" class="q-mr-md">
-              Linkedin
+            <q-btn flat size="md" class="q-mr-md" href="https://twitter.com/MetaCombine" target="_BLANK">
+              Twitter
             </q-btn>
 
-            <q-btn flat size="md" class="q-mr-md">
-              Youtube
+            <q-btn flat size="md" class="q-mr-md" href="https://discord.com/invite/pXR4tCgHTv" target="_BLANK">
+              Discord
+            </q-btn>
+
+            <q-btn flat size="md" class="q-mr-md" href="https://t.me/MetaCombine" target="_BLANK">
+              Telegram
             </q-btn>
           </div>
         </div>
