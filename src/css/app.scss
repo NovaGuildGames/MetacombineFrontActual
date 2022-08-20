@@ -213,7 +213,11 @@ $padding: 0.72rem;
   display: flex;
   width: 9rem;
   height: 32px;
-  margin-left: 6.5px;
+  
+  &:not(.isOne) {
+    margin-left: 6.5px;
+  }
+
   white-space: nowrap !important;
   flex-wrap: nowrap !important;
   align-items: center;
@@ -684,5 +688,9 @@ $padding: 0.72rem;
   .profile__about {
     text-align: center;
     margin-top: 10px;
+  }
+
+  .updateBtn-wrapper {
+    text-align: center;
   }
 }
